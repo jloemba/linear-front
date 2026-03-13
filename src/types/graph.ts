@@ -3,10 +3,16 @@
   name: string;
 }
 
+export interface IPropertyView {
+  name: string;
+  value: string;
+}
+
 export interface IGraphNode {
   id: string;
   label: string;
   type: string;
+  properties: IPropertyView[];
 }
 
 export interface IGraphRelationship {

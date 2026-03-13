@@ -37,7 +37,7 @@ const Home = () => {
       />
 
       {/* Hero */}
-      <section className="max-w-6xl mx-auto px-6 pt-16 pb-12">
+      <section className="max-w-12xl mx-auto px-6 pt-16 pb-12">
         <p className="text-xs font-semibold uppercase tracking-widest text-zinc-400 mb-3">
           {lang === 'fr' ? 'Explore la connaissance autrement' : 'Explore knowledge differently'}
         </p>
@@ -54,7 +54,7 @@ const Home = () => {
       </section>
 
       {/* Grid */}
-      <section className="max-w-6xl mx-auto px-6 pb-20">
+      <section className="max-w-12xl mx-auto px-6 pb-20">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-sm font-semibold text-zinc-500 uppercase tracking-wider">
             {lang === 'fr'
