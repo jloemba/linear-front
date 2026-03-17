@@ -231,9 +231,9 @@ const GraphView = () => {
       </header>
 
       {/* Body */}
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 min-h-0">
         {/* Graph */}
-        <div className="flex-1 relative">
+        <div className="flex-1 relative overflow-hidden">
           {!graph && (
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="flex flex-col items-center gap-3 text-zinc-400">
@@ -269,7 +269,7 @@ const GraphView = () => {
         </div>
 
         {selectedNode && (
-          <aside className="w-80 shrink-0 bg-white border-l border-gray-200 overflow-y-auto">
+          <aside className="shrink-0 bg-white border-l border-gray-200 overflow-y-auto position-absolute w-80">
             <div className="p-6">
               {/* Header */}
               <div className="flex items-start justify-between mb-4">
