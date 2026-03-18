@@ -1,9 +1,15 @@
 ﻿import { useEffect, useRef, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import cytoscape from "cytoscape";
 import { fetchGraphById } from "../../api/graphApi";
 import type { IGraphDetail, IGraphNode } from "../../types/graph";
+//import Header from "../../layout/Header/Header";
 
+interface Props {
+  lang: 'fr' | 'en';
+}
+
+// à mettre dans un fichier de constantes plus tard
 const NODE_TYPE_COLORS: Record<string, string> = {
   GENRE: "#7C3AED",
   ARTIST: "#DB2777",
@@ -27,17 +33,17 @@ const NODE_TYPE_COLORS: Record<string, string> = {
   PRODUCT: "#059669",
 };
 
+// à mettre dans un hook custom plus tard
 const getNodeColor = (type: string): string =>
   NODE_TYPE_COLORS[type] ?? "#3F3F46";
 
-const GraphView = () => {
+const GraphView =  ({ lang }: Props) => {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
   const containerRef = useRef<HTMLDivElement>(null);
   const cyRef = useRef<cytoscape.Core | null>(null);
   const [graph, setGraph] = useState<IGraphDetail | null>(null);
   const [selectedNode, setSelectedNode] = useState<IGraphNode | null>(null);
-  const [lang, setLang] = useState<"fr" | "en">("fr");
+  const [showLegend, setShowLegend] = useState(true);
 
   useEffect(() => {
     if (!id) return;
@@ -47,6 +53,7 @@ const GraphView = () => {
   useEffect(() => {
     if (!graph || !containerRef.current) return;
 
+    // isoler dans un hook custom plus tard
     const cy = cytoscape({
       container: containerRef.current,
       elements: [
@@ -163,72 +170,34 @@ const GraphView = () => {
   return (
     <div className="h-screen flex flex-col bg-zinc-50">
       {/* Header */}
-      <header className="shrink-0 bg-white border-b border-gray-200 h-14 flex items-center px-6 gap-4">
-        <button
-          onClick={() => navigate("/")}
-          className="flex items-center gap-2 text-zinc-500 hover:text-zinc-900 transition-colors text-sm"
-        >
-          <svg
-            className="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M15 19l-7-7 7-7"
-            />
-          </svg>
-          {lang === "fr" ? "Retour" : "Back"}
-        </button>
+      {/* <Header
+        lang={lang}
+        onToggleLang={() => setLang((l) => (l === "fr" ? "en" : "fr"))}
+      />
 
-        <div className="h-4 w-px bg-gray-200" />
-
-        <h1 className="text-sm font-semibold text-zinc-900 truncate flex-1">
-          {graph?.name ?? "..."}
-        </h1>
-
-        <div className="flex items-center gap-3 shrink-0 text-xs text-zinc-400">
-          <span>
-            {graph?.nodes.length ?? 0} {lang === "fr" ? "nœuds" : "nodes"}
-          </span>
-          <span>·</span>
-          <span>
-            {graph?.relationships.length ?? 0}{" "}
-            {lang === "fr" ? "relations" : "edges"}
-          </span>
+      {/* Title section */}
+      {graph && (
+        <div className="shrink-0 bg-white border-b border-gray-100 px-10 py-6 inline-flex flex-col">
+          <p className="text-xs font-semibold uppercase tracking-widest text-zinc-400 mb-2">
+            🕸️ {lang === "fr" ? "Toile" : "Canvas"}
+          </p>
+          <h1 className="text-3xl font-bold text-zinc-900 leading-tight">
+            {graph.name}
+          </h1>
+          <div className="flex items-center gap-3 mt-3 text-xs text-zinc-400">
+            <span>
+              {graph.nodes.length} {lang === "fr" ? "nœuds" : "nodes"}
+            </span>
+            <span>·</span>
+            <span>
+              {graph.relationships.length}{" "}
+              {lang === "fr" ? "relations" : "edges"}
+            </span>
+            <span>·</span>
+            <span>Knovia</span>
+          </div>
         </div>
-
-        {/* Fit button */}
-        <button
-          onClick={handleFit}
-          title={lang === "fr" ? "Recentrer" : "Fit"}
-          className="p-2 rounded-lg text-zinc-400 hover:text-zinc-900 hover:bg-zinc-100 transition-colors"
-        >
-          <svg
-            className="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"
-            />
-          </svg>
-        </button>
-
-        <button
-          onClick={() => setLang((l) => (l === "fr" ? "en" : "fr"))}
-          className="text-xs font-medium text-zinc-400 hover:text-zinc-900 transition-colors"
-        >
-          {lang === "fr" ? "EN" : "FR"}
-        </button>
-      </header>
+      )}
 
       {/* Body */}
       <div className="flex flex-1 min-h-0">
@@ -247,21 +216,49 @@ const GraphView = () => {
 
           {/* Legend */}
           {graph && (
-            <div className="absolute bottom-4 left-4 bg-white border border-gray-200 rounded-xl p-3 shadow-sm z-10 max-w-xs">
-              <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2">
-                {lang === "fr" ? "Types" : "Types"}
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {[...new Set(graph.nodes.map((n) => n.type))].map((type) => (
-                  <div key={type} className="flex items-center gap-1.5">
-                    <div
-                      className="w-3 h-3 rounded-full shrink-0"
-                      style={{ backgroundColor: getNodeColor(type) }}
-                    />
-                    <span className="text-xs text-zinc-600">{type}</span>
+            <div className="absolute bottom-4 left-4 z-10">
+              <button
+                onClick={() => setShowLegend((l) => !l)}
+                className="flex items-center gap-2 bg-white border border-gray-200 rounded-xl px-3 py-2 shadow-sm text-xs font-semibold text-zinc-500 hover:text-zinc-900 transition-colors"
+              >
+                <div className="flex gap-1">
+                  {!showLegend &&
+                    [...new Set(graph.nodes.map((n) => n.type))]
+                      .slice(0, 3)
+                      .map((type) => (
+                        <div
+                          key={type}
+                          className="w-2.5 h-2.5 rounded-full"
+                          style={{ backgroundColor: getNodeColor(type) }}
+                        />
+                      ))}
+                </div>
+                {showLegend
+                  ? lang === "fr"
+                    ? "Masquer légende"
+                    : "Hide"
+                  : lang === "fr"
+                    ? "Légende"
+                    : "Legend"}
+              </button>
+
+              {showLegend && (
+                <div className="mt-2 bg-white border border-gray-200 rounded-xl p-3 shadow-sm max-w-xs">
+                  <div className="flex flex-wrap gap-2">
+                    {[...new Set(graph.nodes.map((n) => n.type))].map(
+                      (type) => (
+                        <div key={type} className="flex items-center gap-1.5">
+                          <div
+                            className="w-3 h-3 rounded-full shrink-0"
+                            style={{ backgroundColor: getNodeColor(type) }}
+                          />
+                          <span className="text-xs text-zinc-600">{type}</span>
+                        </div>
+                      ),
+                    )}
                   </div>
-                ))}
-              </div>
+                </div>
+              )}
             </div>
           )}
 
