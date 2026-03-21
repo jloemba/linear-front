@@ -1,6 +1,8 @@
 ﻿export interface IGraphSummary {
   id: string;
   name: string;
+  description: string | null;
+  createdAt: string;
 }
 
 export interface IPropertyView {
@@ -27,6 +29,8 @@ export interface IGraphRelationship {
 export interface IGraphDetail {
   id: string;
   name: string;
+  description: string | null;
   nodes: IGraphNode[];
   relationships: IGraphRelationship[];
+  createdAt: string;
 }

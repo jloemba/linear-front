@@ -31,7 +31,7 @@ const Header = ({
 
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-gray-200">
-      <div className="w-full max-w-7xl mx-auto px-6 h-14 flex items-center justify-between gap-6">
+      <div className="w-full max-w-7xl h-14 flex items-center justify-between gap-6">
         <div className="flex items-center gap-3 shrink-0">
           {onToggleSidebar && (
             <button
@@ -58,7 +58,7 @@ const Header = ({
             <>
               <button
                 onClick={onBack}
-                className="flex items-center gap-2 text-zinc-500 hover:text-zinc-900 transition-colors text-sm"
+                className="text-zinc-500 hover:text-zinc-900 transition-colors text-sm"
               >
                 <svg
                   className="w-4 h-4"
@@ -85,7 +85,7 @@ const Header = ({
                 <span className="text-white text-xs font-bold">K</span>
               </div>
               <span className="text-zinc-900 font-semibold text-lg tracking-tight">
-                Knovia
+                Knoyeba
               </span>
             </div>
           )}
@@ -97,7 +97,6 @@ const Header = ({
           )}
         </div>
 
-        {/* Centre : search */}
         {showSearch && onSearch && (
           <div className="flex-1 max-w-sm">
             <div className="relative">
@@ -132,7 +131,6 @@ const Header = ({
           </div>
         )}
 
-        {/* Droite : actions + lang */}
         <div className="flex items-center gap-4 shrink-0">
           {actions.map((action) => (
             <button
@@ -148,12 +146,12 @@ const Header = ({
             </button>
           ))}
 
-          <button
+          {/* <button
             onClick={onToggleLang}
             className="text-xs font-medium text-zinc-400 hover:text-zinc-900 transition-colors"
           >
             {lang === "fr" ? "EN" : "FR"}
-          </button>
+          </button> */}
         </div>
       </div>
     </header>

@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/HomePage/HomePage';
-import ClothView from './pages/ClothView';
+import ClothView from './pages/ClothView/ClothView';
 import NavigationLayout from './layout/NavigationLayout/NavigationLayout';
 
 
 function App() {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [lang, setLang] = useState<'fr' | 'en'>('fr');
 
   return (

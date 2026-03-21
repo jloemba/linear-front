@@ -3,47 +3,25 @@ import { useParams } from "react-router-dom";
 import cytoscape from "cytoscape";
 import { fetchGraphById } from "../../api/graphApi";
 import type { IGraphDetail, IGraphNode } from "../../types/graph";
-//import Header from "../../layout/Header/Header";
+import { NODE_TYPE_COLORS } from "../../utils/const";
+import { formatDate } from "../../utils/func";
 
 interface Props {
-  lang: 'fr' | 'en';
+  lang: "fr" | "en";
 }
-
-// à mettre dans un fichier de constantes plus tard
-const NODE_TYPE_COLORS: Record<string, string> = {
-  GENRE: "#7C3AED",
-  ARTIST: "#DB2777",
-  LABEL: "#EA580C",
-  LANGUAGE_FAMILY: "#0369A1",
-  LANGUAGE_SUBFAMILY: "#0891B2",
-  LANGUAGE: "#059669",
-  MIGRATION: "#D97706",
-  PEOPLE: "#DC2626",
-  REGION: "#65A30D",
-  TERRITORY: "#7C3AED",
-  PLATFORM: "#2563EB",
-  BRAND: "#9333EA",
-  PERSON: "#DB2777",
-  CULTURE: "#EA580C",
-  PARENT_COMPANY: "#0F172A",
-  DIVISION: "#334155",
-  SUBSIDIARY: "#475569",
-  FRANCHISE: "#0369A1",
-  COLLABORATION: "#D97706",
-  PRODUCT: "#059669",
-};
 
 // à mettre dans un hook custom plus tard
 const getNodeColor = (type: string): string =>
   NODE_TYPE_COLORS[type] ?? "#3F3F46";
 
-const GraphView =  ({ lang }: Props) => {
+const GraphView = ({ lang }: Props) => {
   const { id } = useParams<{ id: string }>();
   const containerRef = useRef<HTMLDivElement>(null);
   const cyRef = useRef<cytoscape.Core | null>(null);
   const [graph, setGraph] = useState<IGraphDetail | null>(null);
   const [selectedNode, setSelectedNode] = useState<IGraphNode | null>(null);
   const [showLegend, setShowLegend] = useState(true);
+  const [descriptionOpen, setDescriptionOpen] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -53,7 +31,6 @@ const GraphView =  ({ lang }: Props) => {
   useEffect(() => {
     if (!graph || !containerRef.current) return;
 
-    // isoler dans un hook custom plus tard
     const cy = cytoscape({
       container: containerRef.current,
       elements: [
@@ -169,32 +146,59 @@ const GraphView =  ({ lang }: Props) => {
 
   return (
     <div className="h-screen flex flex-col bg-zinc-50">
-      {/* Header */}
-      {/* <Header
-        lang={lang}
-        onToggleLang={() => setLang((l) => (l === "fr" ? "en" : "fr"))}
-      />
-
-      {/* Title section */}
       {graph && (
         <div className="shrink-0 bg-white border-b border-gray-100 px-10 py-6 inline-flex flex-col">
-          <p className="text-xs font-semibold uppercase tracking-widest text-zinc-400 mb-2">
-            🕸️ {lang === "fr" ? "Toile" : "Canvas"}
-          </p>
           <h1 className="text-3xl font-bold text-zinc-900 leading-tight">
             {graph.name}
           </h1>
-          <div className="flex items-center gap-3 mt-3 text-xs text-zinc-400">
+          <div className="flex items-center gap-3 mt-3 text-m text-zinc-400">
             <span>
-              {graph.nodes.length} {lang === "fr" ? "nœuds" : "nodes"}
+              {lang === "fr"
+                ? `Publié le ${formatDate(graph.createdAt, lang)}`
+                : `Posted on ${formatDate(graph.createdAt, lang)}`}
             </span>
             <span>·</span>
-            <span>
-              {graph.relationships.length}{" "}
-              {lang === "fr" ? "relations" : "edges"}
-            </span>
-            <span>·</span>
-            <span>Knovia</span>
+            <span>Auteur</span>
+          </div>
+
+          <div className="shrink-0 bg-white border-b border-gray-100">
+            <button
+              onClick={() => setDescriptionOpen((o) => !o)}
+              className="flex items-center gap-1.5 text-xs font-medium text-zinc-400 hover:text-zinc-700 transition-colors mt-2"
+            >
+              {descriptionOpen
+                ? lang === "fr"
+                  ? "Masquer la description"
+                  : "Hide description"
+                : lang === "fr"
+                  ? "Voir la description"
+                  : "About this graph"}
+              <svg
+                className={`w-3.5 h-3.5 transition-transform duration-200 ${descriptionOpen ? "rotate-180" : ""}`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </button>
+          </div>
+
+          <div
+            className={`overflow-hidden transition-all duration-300 ${descriptionOpen ? "max-h-48 mt-4" : "max-h-0"}`}
+          >
+            <div className="border-t border-gray-100 pt-4">
+              <p className="text-sm text-zinc-600 leading-relaxed max-w-2xl">
+                {(graph.description ?? null)
+                  ? graph.description
+                  : "Aucune description disponible."}
+              </p>
+            </div>
           </div>
         </div>
       )}
@@ -216,10 +220,10 @@ const GraphView =  ({ lang }: Props) => {
 
           {/* Legend */}
           {graph && (
-            <div className="absolute bottom-4 left-4 z-10">
+            <div className="absolute top-3 left-4 z-10">
               <button
                 onClick={() => setShowLegend((l) => !l)}
-                className="flex items-center gap-2 bg-white border border-gray-200 rounded-xl px-3 py-2 shadow-sm text-xs font-semibold text-zinc-500 hover:text-zinc-900 transition-colors"
+                className="flex items-center gap-2 bg-transparent rounded-xl px-3 py-2 text-xs font-semibold text-zinc-500 hover:text-zinc-900 transition-colors"
               >
                 <div className="flex gap-1">
                   {!showLegend &&
