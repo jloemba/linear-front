@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/HomePage/HomePage';
 import ClothView from './pages/ClothView/ClothView';
 import NavigationLayout from './layout/NavigationLayout/NavigationLayout';
-
+import ClothEditor from './pages/ClothEditor/ClothEditor';
 
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -23,7 +23,8 @@ function App() {
           }
         >
           <Route path="/" element={<Home lang={lang} />} />
-          <Route path="/graph/:id" element={<ClothView lang={lang} />} />
+          <Route path="/cloth/:id" element={<ClothView lang={lang} />} />
+          <Route path="/cloth/:id/edit" element={<ClothEditor lang={lang} />} />
         </Route>
       </Routes>
     </BrowserRouter>

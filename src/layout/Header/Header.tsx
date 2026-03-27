@@ -146,12 +146,12 @@ const Header = ({
             </button>
           ))}
 
-          {/* <button
+          <button
             onClick={onToggleLang}
-            className="text-xs font-medium text-zinc-400 hover:text-zinc-900 transition-colors"
+            className="rounded-full border border-zinc-200 px-3 py-1.5 text-xs font-semibold text-zinc-500 transition-colors hover:border-zinc-300 hover:text-zinc-900"
           >
             {lang === "fr" ? "EN" : "FR"}
-          </button> */}
+          </button>
         </div>
       </div>
     </header>

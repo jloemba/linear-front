@@ -1,10 +1,11 @@
 ﻿import { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import cytoscape from "cytoscape";
-import { fetchGraphById } from "../../api/graphApi";
-import type { IGraphDetail, IGraphNode } from "../../types/graph";
+import { fetchClothById } from "../../api/graphApi";
+import type { IClothDetail, IClothNode } from "../../types/graph";
 import { NODE_TYPE_COLORS } from "../../utils/const";
 import { formatDate } from "../../utils/func";
+import { getPropertyDisplayValue } from "../../utils/graphForm";
 
 interface Props {
   lang: "fr" | "en";
@@ -18,14 +19,14 @@ const GraphView = ({ lang }: Props) => {
   const { id } = useParams<{ id: string }>();
   const containerRef = useRef<HTMLDivElement>(null);
   const cyRef = useRef<cytoscape.Core | null>(null);
-  const [graph, setGraph] = useState<IGraphDetail | null>(null);
-  const [selectedNode, setSelectedNode] = useState<IGraphNode | null>(null);
+  const [graph, setGraph] = useState<IClothDetail | null>(null);
+  const [selectedNode, setSelectedNode] = useState<IClothNode | null>(null);
   const [showLegend, setShowLegend] = useState(true);
   const [descriptionOpen, setDescriptionOpen] = useState(false);
 
   useEffect(() => {
     if (!id) return;
-    fetchGraphById(id).then(setGraph);
+    fetchClothById(id).then(setGraph);
   }, [id]);
 
   useEffect(() => {
@@ -139,11 +140,6 @@ const GraphView = ({ lang }: Props) => {
     return () => cy.destroy();
   }, [graph]);
 
-  const handleFit = () => {
-    cyRef.current?.fit(undefined, 60);
-    cyRef.current?.center();
-  };
-
   return (
     <div className="h-screen flex flex-col bg-zinc-50">
       {graph && (
@@ -159,6 +155,15 @@ const GraphView = ({ lang }: Props) => {
             </span>
             <span>·</span>
             <span>Auteur</span>
+          </div>
+
+          <div className="mt-4">
+            <Link
+              to={`/cloth/${graph.id}/edit`}
+              className="inline-flex items-center rounded-full border border-zinc-300 bg-white px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:border-zinc-400 hover:text-zinc-950"
+            >
+              {lang === "fr" ? "Modifier la toile" : "Edit graph"}
+            </Link>
           </div>
 
           <div className="shrink-0 bg-white border-b border-gray-100">
@@ -318,7 +323,7 @@ const GraphView = ({ lang }: Props) => {
                           {prop.name.replaceAll("_", " ")}
                         </span>
                         <span className="text-sm text-zinc-900 leading-relaxed">
-                          {prop.value}
+                          {getPropertyDisplayValue(prop, graph?.nodes) || "—"}
                         </span>
                       </div>
                     ))}

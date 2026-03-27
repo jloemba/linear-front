@@ -1,8 +1,7 @@
 ﻿import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { fetchAllGraphs } from "../../api/graphApi";
-import type { IGraphSummary } from "../../types/graph";
-import { CATEGORIES, CATEGORY_COLORS } from "../../utils/const";
+import { fetchAllCloths } from "../../api/graphApi";
+import type { IClothSummary } from "../../types/graph";
+import { CATEGORY_COLORS } from "../../utils/const";
 import useClothCategory from "../../hooks/useClothCategory/useClothCategory";
 import { formatDate, truncateText } from "../../utils/func";
 
@@ -11,17 +10,16 @@ interface Props {
 }
 
 const Home = ({ lang }: Props) => {
-  const [graphs, setGraphs] = useState<IGraphSummary[]>([]);
-  const [filtered, setFiltered] = useState<IGraphSummary[]>([]);
-  const [activeCategory, setActiveCategory] = useState("Tout");
+  const [graphs, setGraphs] = useState<IClothSummary[]>([]);
+  const [filtered, setFiltered] = useState<IClothSummary[]>([]);
+  const [activeCategory] = useState("Tout");
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
   const { getCategoryFromName } = useClothCategory();
 
   useEffect(() => {
-    fetchAllGraphs()
+    fetchAllCloths()
       .then((data) => {
-        const list: IGraphSummary[] = data.graphs ?? [];
+        const list: IClothSummary[] = data.graphs ?? [];
         setGraphs(list);
         setFiltered(list);
       })
@@ -38,8 +36,6 @@ const Home = ({ lang }: Props) => {
     }
     setFiltered(result);
   }, [activeCategory, graphs]);
-
-  const suggested = graphs.slice(0, 4);
 
   let content;
   const ellipsedText = (description: string|null) => {
@@ -90,7 +86,7 @@ const Home = ({ lang }: Props) => {
                   {category}
                 </span>
                 <h2 className="text-xl font-bold text-zinc-900 leading-snug mb-2 group-hover:text-zinc-600 transition-colors">
-                  <a href={`/graph/${graph.id}`} className="text-inherit no-underline">
+                  <a href={`/cloth/${graph.id}`} className="text-inherit no-underline">
                     {graph.name}
                   </a>
                 </h2>

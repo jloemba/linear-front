@@ -1,23 +1,30 @@
-﻿export interface IGraphSummary {
+﻿export type PropertyValueType = "string" | "date" | "reference";
+
+export interface IClothSummary {
   id: string;
   name: string;
   description: string | null;
   createdAt: string;
+  type?: string | null;
 }
 
 export interface IPropertyView {
   name: string;
-  value: string;
+  valueType?: PropertyValueType;
+  stringValue?: string | null;
+  dateValue?: string | null;
+  refNodeId?: string | null;
+  value?: string;
 }
 
-export interface IGraphNode {
+export interface IClothNode {
   id: string;
   label: string;
   type: string;
   properties: IPropertyView[];
 }
 
-export interface IGraphRelationship {
+export interface IClothRelationship {
   id: string;
   fromId: string;
   toId: string;
@@ -26,11 +33,20 @@ export interface IGraphRelationship {
   endDate: string | null;
 }
 
-export interface IGraphDetail {
+export interface IClothDetail {
   id: string;
   name: string;
   description: string | null;
-  nodes: IGraphNode[];
-  relationships: IGraphRelationship[];
+  type?: string | null;
+  nodes: IClothNode[];
+  relationships: IClothRelationship[];
   createdAt: string;
+}
+
+export interface IGraphUpdatePayload {
+  name: string;
+  type: string;
+  description: string | null;
+  nodes: IClothNode[];
+  relationships: IClothRelationship[];
 }
