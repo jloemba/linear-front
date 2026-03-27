@@ -43,7 +43,7 @@ export interface IClothDetail {
   createdAt: string;
 }
 
-export interface IGraphUpdatePayload {
+export interface IClothUpdatePayload {
   name: string;
   type: string;
   description: string | null;

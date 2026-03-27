@@ -1,13 +1,13 @@
 ﻿import type {
   IClothDetail,
-  IGraphNode,
+  IClothNode,
   IClothRelationship,
-  IGraphUpdatePayload,
+  IClothUpdatePayload as IClothUpdatePayload,
   IPropertyView,
   PropertyValueType,
-} from "../types/graph";
+} from "../types/cloth";
 
-const FALLBACK_GRAPH_TYPE = "GRAPH";
+const FALLBACK_CLOTH_TYPE = "CLOTH";
 
 const createId = () => crypto.randomUUID();
 
@@ -19,7 +19,7 @@ export const createEmptyProperty = (): IPropertyView => ({
   refNodeId: null,
 });
 
-export const createEmptyNode = (): IGraphNode => ({
+export const createEmptyNode = (): IClothNode => ({
   id: createId(),
   label: "",
   type: "",
@@ -67,15 +67,15 @@ export const normalizeProperty = (property: IPropertyView): IPropertyView => {
   };
 };
 
-export const normalizeGraphForForm = (
-  graph: IClothDetail,
-): IGraphUpdatePayload => ({
-  name: graph.name,
-  type: graph.type ?? FALLBACK_GRAPH_TYPE,
-  description: graph.description ?? "",
+export const normalizeClothForForm = (
+  cloth: IClothDetail,
+): IClothUpdatePayload => ({
+  name: cloth.name,
+  type: cloth.type ?? FALLBACK_CLOTH_TYPE,
+  description: cloth.description ?? "",
   nodes:
-    graph.nodes.length > 0
-      ? graph.nodes.map((node) => ({
+    cloth.nodes.length > 0
+      ? cloth.nodes.map((node) => ({
           ...node,
           properties:
             node.properties.length > 0
@@ -84,8 +84,8 @@ export const normalizeGraphForForm = (
         }))
       : [createEmptyNode()],
   relationships:
-    graph.relationships.length > 0
-      ? graph.relationships.map((relationship) => ({
+    cloth.relationships.length > 0
+      ? cloth.relationships.map((relationship) => ({
           ...relationship,
           startDate: relationship.startDate ?? null,
           endDate: relationship.endDate ?? null,
@@ -93,9 +93,9 @@ export const normalizeGraphForForm = (
       : [],
 });
 
-export const sanitizeGraphPayload = (
-  payload: IGraphUpdatePayload,
-): IGraphUpdatePayload => ({
+export const sanitizeClothPayload = (
+  payload: IClothUpdatePayload,
+): IClothUpdatePayload => ({
   name: payload.name.trim(),
   type: payload.type.trim(),
   description: payload.description?.trim() || null,
@@ -117,7 +117,7 @@ export const sanitizeGraphPayload = (
 
 export const getPropertyDisplayValue = (
   property: IPropertyView,
-  nodes?: IGraphNode[],
+  nodes?: IClothNode[],
 ): string => {
   if (property.valueType === "date") {
     return property.dateValue ?? "";
@@ -133,7 +133,7 @@ export const getPropertyDisplayValue = (
   return property.stringValue ?? property.value ?? "";
 };
 
-export const validateGraphPayload = (payload: IGraphUpdatePayload): string[] => {
+export const validateClothPayload = (payload: IClothUpdatePayload): string[] => {
   const errors: string[] = [];
 
   if (!payload.name.trim()) {
@@ -163,7 +163,7 @@ export const validateGraphPayload = (payload: IGraphUpdatePayload): string[] => 
       if (
         property.valueType === "reference" &&
         property.refNodeId &&
-        !payload.nodes.some((graphNode) => graphNode.id === property.refNodeId)
+        !payload.nodes.some((clothNode) => clothNode.id === property.refNodeId)
       ) {
         errors.push(
           `La reference de la propriete ${propertyIndex + 1} du noeud ${nodeIndex + 1} est invalide.`,

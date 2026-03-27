@@ -1,6 +1,6 @@
 ﻿import cytoscape from "cytoscape";
 import { useEffect, useRef, useState } from "react";
-import type { IGraphUpdatePayload } from "../../../types/graph";
+import type { IClothUpdatePayload } from "../../../types/cloth";
 import { NODE_TYPE_COLORS } from "../../../utils/const";
 
 const panelClassName =
@@ -9,7 +9,7 @@ const panelClassName =
 const getNodeColor = (type: string) => NODE_TYPE_COLORS[type] ?? "#44403c";
 
 interface Props {
-  form: IGraphUpdatePayload;
+  form: IClothUpdatePayload;
   lang: "fr" | "en";
   saving: boolean;
   isDirty: boolean;
@@ -18,7 +18,7 @@ interface Props {
   onSubmit: () => void;
 }
 
-const GraphPreviewPanel = ({
+const ClothPreviewPanel = ({
   form,
   lang,
   saving,
@@ -246,4 +246,4 @@ const GraphPreviewPanel = ({
   );
 };
 
-export default GraphPreviewPanel;
+export default ClothPreviewPanel;

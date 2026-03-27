@@ -1,11 +1,11 @@
 ﻿import { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import cytoscape from "cytoscape";
-import { fetchClothById } from "../../api/graphApi";
-import type { IClothDetail, IClothNode } from "../../types/graph";
+import { fetchClothById } from "../../api/clothApi";
+import type { IClothDetail, IClothNode } from "../../types/cloth";
 import { NODE_TYPE_COLORS } from "../../utils/const";
 import { formatDate } from "../../utils/func";
-import { getPropertyDisplayValue } from "../../utils/graphForm";
+import { getPropertyDisplayValue } from "../../utils/clothForm";
 
 interface Props {
   lang: "fr" | "en";
@@ -15,27 +15,27 @@ interface Props {
 const getNodeColor = (type: string): string =>
   NODE_TYPE_COLORS[type] ?? "#3F3F46";
 
-const GraphView = ({ lang }: Props) => {
+const ClothView = ({ lang }: Props) => {
   const { id } = useParams<{ id: string }>();
   const containerRef = useRef<HTMLDivElement>(null);
   const cyRef = useRef<cytoscape.Core | null>(null);
-  const [graph, setGraph] = useState<IClothDetail | null>(null);
+  const [cloth, setCloth] = useState<IClothDetail | null>(null);
   const [selectedNode, setSelectedNode] = useState<IClothNode | null>(null);
   const [showLegend, setShowLegend] = useState(true);
   const [descriptionOpen, setDescriptionOpen] = useState(false);
 
   useEffect(() => {
     if (!id) return;
-    fetchClothById(id).then(setGraph);
+    fetchClothById(id).then(setCloth);
   }, [id]);
 
   useEffect(() => {
-    if (!graph || !containerRef.current) return;
+    if (!cloth || !containerRef.current) return;
 
     const cy = cytoscape({
       container: containerRef.current,
       elements: [
-        ...graph.nodes.map((node) => ({
+        ...cloth.nodes.map((node) => ({
           data: {
             id: node.id,
             label: node.label,
@@ -43,7 +43,7 @@ const GraphView = ({ lang }: Props) => {
             color: getNodeColor(node.type),
           },
         })),
-        ...graph.relationships.map((rel) => ({
+        ...cloth.relationships.map((rel) => ({
           data: {
             id: rel.id,
             source: rel.fromId,
@@ -127,7 +127,7 @@ const GraphView = ({ lang }: Props) => {
 
     cy.on("tap", "node", (evt) => {
       const nodeId = evt.target.data("id");
-      const found = graph.nodes.find((n) => n.id === nodeId) ?? null;
+      const found = cloth.nodes.find((n) => n.id === nodeId) ?? null;
       setSelectedNode(found);
     });
 
@@ -138,20 +138,20 @@ const GraphView = ({ lang }: Props) => {
     cy.fit(undefined, 60);
 
     return () => cy.destroy();
-  }, [graph]);
+  }, [cloth]);
 
   return (
     <div className="h-screen flex flex-col bg-zinc-50">
-      {graph && (
+      {cloth && (
         <div className="shrink-0 bg-white border-b border-gray-100 px-10 py-6 inline-flex flex-col">
           <h1 className="text-3xl font-bold text-zinc-900 leading-tight">
-            {graph.name}
+            {cloth.name}
           </h1>
           <div className="flex items-center gap-3 mt-3 text-m text-zinc-400">
             <span>
               {lang === "fr"
-                ? `Publié le ${formatDate(graph.createdAt, lang)}`
-                : `Posted on ${formatDate(graph.createdAt, lang)}`}
+                ? `Publié le ${formatDate(cloth.createdAt, lang)}`
+                : `Posted on ${formatDate(cloth.createdAt, lang)}`}
             </span>
             <span>·</span>
             <span>Auteur</span>
@@ -159,10 +159,10 @@ const GraphView = ({ lang }: Props) => {
 
           <div className="mt-4">
             <Link
-              to={`/cloth/${graph.id}/edit`}
+              to={`/cloth/${cloth.id}/edit`}
               className="inline-flex items-center rounded-full border border-zinc-300 bg-white px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:border-zinc-400 hover:text-zinc-950"
             >
-              {lang === "fr" ? "Modifier la toile" : "Edit graph"}
+              {lang === "fr" ? "Modifier la toile" : "Edit cloth"}
             </Link>
           </div>
 
@@ -177,7 +177,7 @@ const GraphView = ({ lang }: Props) => {
                   : "Hide description"
                 : lang === "fr"
                   ? "Voir la description"
-                  : "About this graph"}
+                  : "About this cloth"}
               <svg
                 className={`w-3.5 h-3.5 transition-transform duration-200 ${descriptionOpen ? "rotate-180" : ""}`}
                 fill="none"
@@ -199,8 +199,8 @@ const GraphView = ({ lang }: Props) => {
           >
             <div className="border-t border-gray-100 pt-4">
               <p className="text-sm text-zinc-600 leading-relaxed max-w-2xl">
-                {(graph.description ?? null)
-                  ? graph.description
+                {(cloth.description ?? null)
+                  ? cloth.description
                   : "Aucune description disponible."}
               </p>
             </div>
@@ -210,9 +210,8 @@ const GraphView = ({ lang }: Props) => {
 
       {/* Body */}
       <div className="flex flex-1 min-h-0">
-        {/* Graph */}
         <div className="flex-1 relative overflow-hidden">
-          {!graph && (
+          {!cloth && (
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="flex flex-col items-center gap-3 text-zinc-400">
                 <div className="w-8 h-8 border-2 border-zinc-300 border-t-zinc-600 rounded-full animate-spin" />
@@ -224,7 +223,7 @@ const GraphView = ({ lang }: Props) => {
           )}
 
           {/* Legend */}
-          {graph && (
+          {cloth && (
             <div className="absolute top-3 left-4 z-10">
               <button
                 onClick={() => setShowLegend((l) => !l)}
@@ -232,7 +231,7 @@ const GraphView = ({ lang }: Props) => {
               >
                 <div className="flex gap-1">
                   {!showLegend &&
-                    [...new Set(graph.nodes.map((n) => n.type))]
+                    [...new Set(cloth.nodes.map((n) => n.type))]
                       .slice(0, 3)
                       .map((type) => (
                         <div
@@ -254,7 +253,7 @@ const GraphView = ({ lang }: Props) => {
               {showLegend && (
                 <div className="mt-2 bg-white border border-gray-200 rounded-xl p-3 shadow-sm max-w-xs">
                   <div className="flex flex-wrap gap-2">
-                    {[...new Set(graph.nodes.map((n) => n.type))].map(
+                    {[...new Set(cloth.nodes.map((n) => n.type))].map(
                       (type) => (
                         <div key={type} className="flex items-center gap-1.5">
                           <div
@@ -323,7 +322,7 @@ const GraphView = ({ lang }: Props) => {
                           {prop.name.replaceAll("_", " ")}
                         </span>
                         <span className="text-sm text-zinc-900 leading-relaxed">
-                          {getPropertyDisplayValue(prop, graph?.nodes) || "—"}
+                          {getPropertyDisplayValue(prop, cloth?.nodes) || "—"}
                         </span>
                       </div>
                     ))}
@@ -342,7 +341,7 @@ const GraphView = ({ lang }: Props) => {
                   {lang === "fr" ? "Relations" : "Relationships"}
                 </h3>
                 <div className="flex flex-col gap-2">
-                  {graph?.relationships
+                  {cloth?.relationships
                     .filter(
                       (r) =>
                         r.fromId === selectedNode.id ||
@@ -351,7 +350,7 @@ const GraphView = ({ lang }: Props) => {
                     .map((rel) => {
                       const isFrom = rel.fromId === selectedNode.id;
                       const otherId = isFrom ? rel.toId : rel.fromId;
-                      const otherNode = graph.nodes.find(
+                      const otherNode = cloth.nodes.find(
                         (n) => n.id === otherId,
                       );
                       return (
@@ -359,7 +358,7 @@ const GraphView = ({ lang }: Props) => {
                           key={rel.id}
                           onClick={() => {
                             const found =
-                              graph.nodes.find((n) => n.id === otherId) ?? null;
+                              cloth.nodes.find((n) => n.id === otherId) ?? null;
                             setSelectedNode(found);
                           }}
                           className="flex items-center gap-2 p-3 bg-zinc-50 rounded-xl text-sm cursor-pointer hover:bg-zinc-100 transition-colors"
@@ -390,4 +389,4 @@ const GraphView = ({ lang }: Props) => {
   );
 };
 
-export default GraphView;
+export default ClothView;

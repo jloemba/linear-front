@@ -1,22 +1,22 @@
-﻿import type { IClothDetail, IGraphSummary, IGraphUpdatePayload } from "../types/graph";
+﻿import type { IClothDetail, IClothSummary, IClothUpdatePayload } from "../types/cloth";
 
 const BASE_URL = "http://localhost:8080/api";
 
-export const fetchAllCloths = async (): Promise<{ graphs: IGraphSummary[] }> => {
+export const fetchAllCloths = async (): Promise<{ cloths: IClothSummary[] }> => {
   const res = await fetch(`${BASE_URL}/graphs`);
-  if (!res.ok) throw new Error('Failed to fetch graphs');
+  if (!res.ok) throw new Error('Failed to fetch cloths');
   return res.json();
 };
 
 export const fetchClothById = async (id: string): Promise<IClothDetail> => {
   const res = await fetch(`${BASE_URL}/graphs/${id}`);
-  if (!res.ok) throw new Error('Failed to fetch graph');
+  if (!res.ok) throw new Error('Failed to fetch cloth');
   return res.json();
 };
 
 export const updateClothById = async (
   id: string,
-  payload: IGraphUpdatePayload,
+  payload: IClothUpdatePayload,
 ): Promise<IClothDetail> => {
   const res = await fetch(`${BASE_URL}/graphs/${id}`, {
     method: "PUT",
@@ -28,7 +28,7 @@ export const updateClothById = async (
 
   if (!res.ok) {
     const responseText = await res.text();
-    throw new Error(responseText || `Failed to update graph (${res.status})`);
+    throw new Error(responseText || `Failed to update cloth (${res.status})`);
   }
 
   if (res.status === 204) {

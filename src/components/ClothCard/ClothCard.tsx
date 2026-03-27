@@ -1,7 +1,7 @@
-﻿import type { IGraphSummary } from '../../types/graph';
+﻿import type { IClothSummary } from '../../types/cloth';
 
 interface Props {
-  graph: IGraphSummary;
+  cloth: IClothSummary;
   onClick: (id: string) => void;
 }
 
@@ -25,13 +25,13 @@ const getCategoryFromName = (name: string): string => {
   return 'Culture';
 };
 
-const GraphCard = ({ graph, onClick }: Props) => {
-  const category = getCategoryFromName(graph.name);
+const ClothCard = ({ cloth, onClick }: Props) => {
+  const category = getCategoryFromName(cloth.name);
   const colorClass = CATEGORY_COLORS[category] || 'bg-gray-50 text-gray-700';
 
   return (
     <div
-      onClick={() => onClick(graph.id)}
+      onClick={() => onClick(cloth.id)}
       className="bg-white border border-gray-200 rounded-2xl p-6 cursor-pointer hover:shadow-md hover:border-zinc-300 transition-all duration-200 group"
     >
       {/* Category badge */}
@@ -41,7 +41,7 @@ const GraphCard = ({ graph, onClick }: Props) => {
 
       {/* Title */}
       <h3 className="text-zinc-900 font-semibold text-lg leading-snug group-hover:text-zinc-600 transition-colors">
-        {graph.name}
+        {cloth.name}
       </h3>
 
       {/* Arrow */}
@@ -55,4 +55,4 @@ const GraphCard = ({ graph, onClick }: Props) => {
   );
 };
 
-export default GraphCard;
+export default ClothCard;

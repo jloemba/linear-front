@@ -1,6 +1,6 @@
 ﻿import { useEffect, useState } from "react";
-import { fetchAllCloths } from "../../api/graphApi";
-import type { IClothSummary } from "../../types/graph";
+import { fetchAllCloths } from "../../api/clothApi";
+import type { IClothSummary } from "../../types/cloth";
 import { CATEGORY_COLORS } from "../../utils/const";
 import useClothCategory from "../../hooks/useClothCategory/useClothCategory";
 import { formatDate, truncateText } from "../../utils/func";
@@ -10,7 +10,7 @@ interface Props {
 }
 
 const Home = ({ lang }: Props) => {
-  const [graphs, setGraphs] = useState<IClothSummary[]>([]);
+  const [cloths, setCloths] = useState<IClothSummary[]>([]);
   const [filtered, setFiltered] = useState<IClothSummary[]>([]);
   const [activeCategory] = useState("Tout");
   const [loading, setLoading] = useState(true);
@@ -19,8 +19,8 @@ const Home = ({ lang }: Props) => {
   useEffect(() => {
     fetchAllCloths()
       .then((data) => {
-        const list: IClothSummary[] = data.graphs ?? [];
-        setGraphs(list);
+        const list: IClothSummary[] = data.cloths ?? [];
+        setCloths(list);
         setFiltered(list);
       })
       .catch((err) => console.error(err))
@@ -28,14 +28,14 @@ const Home = ({ lang }: Props) => {
   }, []);
 
   useEffect(() => {
-    let result = graphs;
+    let result = cloths;
     if (activeCategory !== "Tout") {
       result = result.filter(
         (g) => getCategoryFromName(g.name) === activeCategory,
       );
     }
     setFiltered(result);
-  }, [activeCategory, graphs]);
+  }, [activeCategory, cloths]);
 
   let content;
   const ellipsedText = (description: string|null) => {
@@ -72,11 +72,11 @@ const Home = ({ lang }: Props) => {
   } else {
     content = (
       <div className="flex flex-col divide-y divide-gray-100">
-        {filtered.map((graph) => {
-          const category = getCategoryFromName(graph.name);
+        {filtered.map((cloth) => {
+          const category = getCategoryFromName(cloth.name);
           return (
             <article
-              key={graph.id}
+              key={cloth.id}
               className="flex items-start gap-6 py-8 cursor-pointer group"
             >
               <div className="flex-1 min-w-0">
@@ -86,16 +86,16 @@ const Home = ({ lang }: Props) => {
                   {category}
                 </span>
                 <h2 className="text-xl font-bold text-zinc-900 leading-snug mb-2 group-hover:text-zinc-600 transition-colors">
-                  <a href={`/cloth/${graph.id}`} className="text-inherit no-underline">
-                    {graph.name}
+                  <a href={`/cloth/${cloth.id}`} className="text-inherit no-underline">
+                    {cloth.name}
                   </a>
                 </h2>
-                <p className="text-sm text-zinc-500 mb-4">{ellipsedText(graph.description)}</p>
+                <p className="text-sm text-zinc-500 mb-4">{ellipsedText(cloth.description)}</p>
                 <div className="flex items-center gap-3 text-xs text-zinc-400">
                   <span>
                     {lang === "fr"
-                      ? `Publié le ${formatDate(graph.createdAt, lang)}`
-                      : `Posted on ${formatDate(graph.createdAt, lang)}`}
+                      ? `Publié le ${formatDate(cloth.createdAt, lang)}`
+                      : `Posted on ${formatDate(cloth.createdAt, lang)}`}
                   </span>
                   <span>·</span>
                   <span>Auteur</span>

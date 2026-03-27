@@ -1,22 +1,22 @@
 ﻿import { type FormEvent, useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { fetchClothById, updateClothById } from "../../api/graphApi";
+import { fetchClothById, updateClothById } from "../../api/clothApi";
 import type {
   IClothNode,
   IClothRelationship,
-  IGraphUpdatePayload,
+  IClothUpdatePayload,
   IPropertyView,
   PropertyValueType,
-} from "../../types/graph";
+} from "../../types/cloth";
 import {
   createEmptyNode,
   createEmptyProperty,
   createEmptyRelationship,
-  normalizeGraphForForm,
-  sanitizeGraphPayload,
-  validateGraphPayload,
-} from "../../utils/graphForm";
-import GraphPreviewPanel from "./ClothPreviewPanel/ClothPreviewPanel";
+  normalizeClothForForm,
+  sanitizeClothPayload,
+  validateClothPayload,
+} from "../../utils/clothForm";
+import ClothPreviewPanel from "./ClothPreviewPanel/ClothPreviewPanel";
 
 interface Props {
   lang: "fr" | "en";
@@ -31,7 +31,7 @@ const panelClassName =
 const ClothEditor = ({ lang }: Props) => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [form, setForm] = useState<IGraphUpdatePayload | null>(null);
+  const [form, setForm] = useState<IClothUpdatePayload | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -46,7 +46,7 @@ const ClothEditor = ({ lang }: Props) => {
 
     fetchClothById(id)
       .then((cloth) => {
-        const normalized = normalizeGraphForForm(cloth);
+        const normalized = normalizeClothForForm(cloth);
         setForm(normalized);
         setLastSavedSnapshot(JSON.stringify(normalized));
       })
@@ -54,7 +54,7 @@ const ClothEditor = ({ lang }: Props) => {
         setError(
           lang === "fr"
             ? "Impossible de charger cette toile."
-            : "Unable to load this graph.",
+            : "Unable to load this cloth.",
         );
       })
       .finally(() => setLoading(false));
@@ -74,7 +74,7 @@ const ClothEditor = ({ lang }: Props) => {
     [form?.nodes, lang],
   );
 
-  const updateForm = (updater: (current: IGraphUpdatePayload) => IGraphUpdatePayload) => {
+  const updateForm = (updater: (current: IClothUpdatePayload) => IClothUpdatePayload) => {
     setForm((current) => {
       if (!current) return current;
       return updater(current);
@@ -83,7 +83,7 @@ const ClothEditor = ({ lang }: Props) => {
     setSuccessMessage(null);
   };
 
-  const updateGraphField = (field: "name" | "type" | "description", value: string) => {
+  const updateClothField = (field: "name" | "type" | "description", value: string) => {
     updateForm((current) => ({
       ...current,
       [field]: value,
@@ -229,8 +229,8 @@ const ClothEditor = ({ lang }: Props) => {
   const handleSubmit = async (event?: FormEvent<HTMLFormElement>) => {
     event?.preventDefault();
     if (!id || !form) return;
-    const sanitizedPayload = sanitizeGraphPayload(form);
-    const validationErrors = validateGraphPayload(sanitizedPayload);
+    const sanitizedPayload = sanitizeClothPayload(form);
+    const validationErrors = validateClothPayload(sanitizedPayload);
 
     if (validationErrors.length > 0) {
       setError(validationErrors[0]);
@@ -242,17 +242,16 @@ const ClothEditor = ({ lang }: Props) => {
     setSuccessMessage(null);
 
     try {
-      const updatedGraph = await updateClothById(id, sanitizedPayload);
-      const normalized = normalizeGraphForForm(updatedGraph);
+      const updatedCloth = await updateClothById(id, sanitizedPayload);
+      const normalized = normalizeClothForForm(updatedCloth);
       setForm(normalized);
       setLastSavedSnapshot(JSON.stringify(normalized));
       setSuccessMessage(
         lang === "fr"
           ? "La toile a bien ete mise a jour."
-          : "The graph was successfully updated.",
+          : "The cloth was successfully updated.",
       );
     } catch {
-      //console.error("Failed to update graph with payload:", sanitizedPayload);
       setError(
         lang === "fr"
           ? "La sauvegarde a echoue. Verifie la route PUT cote API."
@@ -285,7 +284,7 @@ const ClothEditor = ({ lang }: Props) => {
       <div className="px-6 py-16">
         <div className="mx-auto max-w-xl rounded-[28px] border border-red-200 bg-red-50 px-6 py-8 text-red-700">
           {error ??
-            (lang === "fr" ? "Cette toile est introuvable." : "This graph could not be found.")}
+            (lang === "fr" ? "Cette toile est introuvable." : "This cloth could not be found.")}
         </div>
       </div>
     );
@@ -301,16 +300,16 @@ const ClothEditor = ({ lang }: Props) => {
                 {lang === "fr" ? "Studio d'edition" : "Editing studio"}
               </span>
               <span className="text-stone-400">
-                {lang === "fr" ? "Mise a jour complete de la toile" : "Full graph update"}
+                {lang === "fr" ? "Mise a jour complete de la toile" : "Full cloth update"}
               </span>
             </div>
             <h1 className="text-4xl font-semibold tracking-tight text-stone-900">
-              {lang === "fr" ? "Modifier une toile" : "Edit graph"}
+              {lang === "fr" ? "Modifier une toile" : "Edit cloth"}
             </h1>
             <p className="mt-3 max-w-2xl text-sm leading-7 text-stone-600">
               {lang === "fr"
-                ? "Chaque section reprend les donnees existantes pour que tu puisses ajuster la structure complete du graphe avant envoi. Les suppressions de noeuds nettoient aussi les references et relations associees."
-                : "Each section reuses the existing graph data so you can adjust the full structure before saving. Removing a node also clears related references and relationships."}
+                ? "Chaque section reprend les donnees existantes pour que tu puisses ajuster la structure complete de la toile avant envoi. Les suppressions de noeuds nettoient aussi les references et relations associees."
+                : "Each section reuses the existing cloth data so you can adjust the full structure before saving. Removing a node also clears related references and relationships."}
             </p>
           </div>
 
@@ -319,7 +318,7 @@ const ClothEditor = ({ lang }: Props) => {
               to={id ? `/cloth/${id}` : "/"}
               className="rounded-full border border-stone-300 bg-white px-4 py-2 text-sm font-medium text-stone-700 transition hover:border-stone-400 hover:text-stone-900"
             >
-              {lang === "fr" ? "Retour au graphe" : "Back to graph"}
+              {lang === "fr" ? "Retour à la toile" : "Back to cloth"}
             </Link>
             <button
               type="submit"
@@ -342,7 +341,7 @@ const ClothEditor = ({ lang }: Props) => {
             <section className={`${panelClassName} overflow-hidden`}>
               <div className="border-b border-stone-200 bg-[linear-gradient(135deg,#fff7ed_0%,#ffffff_85%)] px-6 py-5">
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-700">
-                  {lang === "fr" ? "Identite de la toile" : "Graph identity"}
+                  {lang === "fr" ? "Identite de la toile" : "Cloth identity"}
                 </p>
                 <h2 className="mt-2 text-2xl font-semibold text-stone-900">
                   {lang === "fr" ? "Informations generales" : "General information"}
@@ -358,8 +357,8 @@ const ClothEditor = ({ lang }: Props) => {
                     id="graph-name"
                     className={inputClassName}
                     value={form.name}
-                    onChange={(event) => updateGraphField("name", event.target.value)}
-                    placeholder={lang === "fr" ? "Nom de la toile" : "Graph name"}
+                    onChange={(event) => updateClothField("name", event.target.value)}
+                    placeholder={lang === "fr" ? "Nom de la toile" : "Cloth name"}
                   />
                 </div>
 
@@ -371,7 +370,7 @@ const ClothEditor = ({ lang }: Props) => {
                     id="graph-type"
                     className={inputClassName}
                     value={form.type}
-                    onChange={(event) => updateGraphField("type", event.target.value)}
+                    onChange={(event) => updateClothField("type", event.target.value)}
                     placeholder="HIP_HOP"
                   />
                 </div>
@@ -396,11 +395,11 @@ const ClothEditor = ({ lang }: Props) => {
                     id="graph-description"
                     className={`${inputClassName} min-h-32 resize-y`}
                     value={form.description ?? ""}
-                    onChange={(event) => updateGraphField("description", event.target.value)}
+                    onChange={(event) => updateClothField("description", event.target.value)}
                     placeholder={
                       lang === "fr"
                         ? "Explique la logique de la toile, son angle et ses limites."
-                        : "Describe the graph logic, angle and boundaries."
+                        : "Describe the cloth logic, angle and boundaries."
                     }
                   />
                 </div>
@@ -647,7 +646,7 @@ const ClothEditor = ({ lang }: Props) => {
           </div>
 
           <aside className="space-y-6 lg:sticky lg:top-20">
-            <GraphPreviewPanel
+            <ClothPreviewPanel
               form={form}
               lang={lang}
               saving={saving}
@@ -657,7 +656,7 @@ const ClothEditor = ({ lang }: Props) => {
               onSubmit={() => {
                 void handleSubmit();
               }}
-              onExit={() => navigate(id ? `/graph/${id}` : "/")}
+              onExit={() => navigate(id ? `/cloth/${id}` : "/")}
             />
           </aside>
         </div>
