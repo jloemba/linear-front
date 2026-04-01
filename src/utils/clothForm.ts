@@ -6,6 +6,7 @@
   IPropertyView,
   PropertyValueType,
 } from "../types/cloth";
+import { getClothMessages, type AppLang } from "../i18n/cloth";
 
 const FALLBACK_CLOTH_TYPE = "CLOTH";
 
@@ -133,31 +134,33 @@ export const getPropertyDisplayValue = (
   return property.stringValue ?? property.value ?? "";
 };
 
-export const validateClothPayload = (payload: IClothUpdatePayload): string[] => {
+export const validateClothPayload = (
+  payload: IClothUpdatePayload,
+  lang: AppLang = "fr",
+): string[] => {
   const errors: string[] = [];
+  const { validation } = getClothMessages(lang);
 
   if (!payload.name.trim()) {
-    errors.push("Le nom de la toile est requis.");
+    errors.push(validation.clothNameRequired);
   }
 
   if (!payload.type.trim()) {
-    errors.push("Le type de la toile est requis.");
+    errors.push(validation.clothTypeRequired);
   }
 
   payload.nodes.forEach((node, nodeIndex) => {
     if (!node.label.trim()) {
-      errors.push(`Le noeud ${nodeIndex + 1} doit avoir un libelle.`);
+      errors.push(validation.nodeLabelRequired(nodeIndex + 1));
     }
 
     if (!node.type.trim()) {
-      errors.push(`Le noeud ${nodeIndex + 1} doit avoir un type.`);
+      errors.push(validation.nodeTypeRequired(nodeIndex + 1));
     }
 
     node.properties.forEach((property, propertyIndex) => {
       if (!property.name.trim()) {
-        errors.push(
-          `La propriete ${propertyIndex + 1} du noeud ${nodeIndex + 1} doit avoir un nom.`,
-        );
+        errors.push(validation.propertyNameRequired(propertyIndex + 1, nodeIndex + 1));
       }
 
       if (
@@ -165,24 +168,22 @@ export const validateClothPayload = (payload: IClothUpdatePayload): string[] => 
         property.refNodeId &&
         !payload.nodes.some((clothNode) => clothNode.id === property.refNodeId)
       ) {
-        errors.push(
-          `La reference de la propriete ${propertyIndex + 1} du noeud ${nodeIndex + 1} est invalide.`,
-        );
+        errors.push(validation.propertyReferenceInvalid(propertyIndex + 1, nodeIndex + 1));
       }
     });
   });
 
   payload.relationships.forEach((relationship, relationshipIndex) => {
     if (!relationship.type.trim()) {
-      errors.push(`La relation ${relationshipIndex + 1} doit avoir un type.`);
+      errors.push(validation.relationshipTypeRequired(relationshipIndex + 1));
     }
 
     if (!relationship.fromId || !payload.nodes.some((node) => node.id === relationship.fromId)) {
-      errors.push(`La relation ${relationshipIndex + 1} doit avoir une source valide.`);
+      errors.push(validation.relationshipSourceInvalid(relationshipIndex + 1));
     }
 
     if (!relationship.toId || !payload.nodes.some((node) => node.id === relationship.toId)) {
-      errors.push(`La relation ${relationshipIndex + 1} doit avoir une cible valide.`);
+      errors.push(validation.relationshipTargetInvalid(relationshipIndex + 1));
     }
   });
 

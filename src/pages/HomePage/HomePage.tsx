@@ -19,7 +19,7 @@ const Home = ({ lang }: Props) => {
   useEffect(() => {
     fetchAllCloths()
       .then((data) => {
-        const list: IClothSummary[] = data.cloths ?? [];
+        const list: IClothSummary[] = data.graphs ?? [];
         setCloths(list);
         setFiltered(list);
       })
