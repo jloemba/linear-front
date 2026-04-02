@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { LanguageProvider } from './context/LanguageProvider';
-import { SnackbarProvider } from './context/SnackbarProvider';
-import { ThemeProvider } from './context/ThemeProvider';
+import { LanguageProvider } from './context/Language/LanguageProvider';
+import { SnackbarProvider } from './context/Snackbar/SnackbarProvider';
+import { ThemeProvider } from './context/Theme/ThemeProvider';
 import Home from './pages/HomePage/HomePage';
 import ClothView from './pages/ClothView/ClothView';
 import NavigationLayout from './layout/NavigationLayout/NavigationLayout';

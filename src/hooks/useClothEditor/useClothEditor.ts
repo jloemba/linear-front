@@ -5,7 +5,7 @@ import {
   deleteClothById,
   fetchClothById,
   updateClothById,
-} from "../../api/clothApi";
+} from "../../api/cloth/clothApi";
 import type {
   IClothNode,
   IClothRelationship,

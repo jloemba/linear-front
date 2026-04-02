@@ -3,7 +3,7 @@ import Snackbar from "../components/Snackbar/Snackbar";
 import SnackbarContext, {
   type SnackbarContextValue,
   type SnackbarState,
-} from "./snackbarContext";
+} from "./Snackbar/snackbarContext";
 
 const SNACKBAR_DURATION = 4000;
 

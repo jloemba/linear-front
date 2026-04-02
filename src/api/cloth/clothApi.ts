@@ -3,7 +3,7 @@
   IClothDetail,
   IClothSummary,
   IClothUpdatePayload,
-} from "../types/cloth";
+} from "../../types/cloth";
 
 const BASE_URL = "http://localhost:8080/api";
 

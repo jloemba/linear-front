@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { deleteClothById, fetchClothById } from "../../api/clothApi";
+import { deleteClothById, fetchClothById } from "../../api/cloth/clothApi";
 import type { IClothDetail, IClothNode } from "../../types/cloth";
 import useSnackbar from "../useSnackbar/useSnackbar";
 

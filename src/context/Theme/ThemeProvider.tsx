@@ -2,7 +2,7 @@ import { type PropsWithChildren, useEffect, useMemo, useState } from "react";
 import ThemeContext, {
   type ThemeContextValue,
   type ThemeMode,
-} from "./themeContext";
+} from "./Theme/themeContext";
 
 const STORAGE_KEY = "knovia-theme";
 

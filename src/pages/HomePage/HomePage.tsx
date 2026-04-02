@@ -1,7 +1,7 @@
 ﻿import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import useLanguage from "../../hooks/useLanguage/useLanguage";
-import { fetchAllCloths } from "../../api/clothApi";
+import { fetchAllCloths } from "../../api/cloth/clothApi";
 import type { IClothSummary } from "../../types/cloth";
 import { CATEGORY_COLORS } from "../../utils/const";
 import useClothCategory from "../../hooks/useClothCategory/useClothCategory";

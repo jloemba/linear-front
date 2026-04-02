@@ -1,5 +1,5 @@
 import { type PropsWithChildren, useMemo, useState } from "react";
-import type { AppLang } from "../i18n/cloth";
+import type { AppLang } from "../../i18n/cloth";
 import LanguageContext, {
   type LanguageContextValue,
 } from "./languageContext";
