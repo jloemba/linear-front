@@ -47,7 +47,7 @@ jobs:
         run: npm ci
 
       - name: Run all tests (unit, hooks, integration)
-        run: npm test -- --coverage --watchAll=false
+        run: npm test -- --coverage
         env:
           CI: true
 
