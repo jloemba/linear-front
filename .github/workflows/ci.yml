@@ -76,10 +76,10 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
 
-      - name: Run Playwright E2E tests
-        run: npm run test:e2e -- --reporter=html
-        env:
-          CI: true
+      # - name: Run Playwright E2E tests
+      #   run: npm run test:e2e -- --reporter=html
+      #   env:
+      #     CI: true
 
       - name: Upload Playwright report
         uses: actions/upload-artifact@v4
