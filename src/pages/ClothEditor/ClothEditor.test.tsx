@@ -5,10 +5,10 @@ import { LanguageProvider } from "../../context/Language/LanguageProvider";
 import { ThemeProvider } from "../../context/Theme/ThemeProvider";
 import { SnackbarProvider } from "../../context/Snackbar/SnackbarProvider";
 
-const useClothEditorMock = vi.fn();
+const mockUseClothEditor = vi.fn();
 
 vi.mock("../../hooks/useClothEditor/useClothEditor", () => ({
-  default: (...args: unknown[]) => useClothEditorMock(...args),
+  default: (...args: unknown[]) => mockUseClothEditor(...args),
 }));
 
 vi.mock("./ClothIdentitySection/ClothIdentitySection", () => ({
@@ -169,7 +169,7 @@ describe("ClothEditor page", () => {
     const scrollToNode = vi.fn();
     const handleSubmit = vi.fn();
 
-    useClothEditorMock.mockReturnValue({
+    mockUseClothEditor.mockReturnValue({
       isCreateMode: true,
       isDeleteDialogOpen: false,
       form: {
@@ -241,7 +241,7 @@ describe("ClothEditor page", () => {
   });
 
   it("renders the delete dialog in edit mode", () => {
-    useClothEditorMock.mockReturnValue({
+    mockUseClothEditor.mockReturnValue({
       isCreateMode: false,
       isDeleteDialogOpen: true,
       form: {
@@ -287,7 +287,7 @@ describe("ClothEditor page", () => {
   });
 
   it("renders the loading skeleton", () => {
-    useClothEditorMock.mockReturnValue({
+    mockUseClothEditor.mockReturnValue({
       isCreateMode: false,
       isDeleteDialogOpen: false,
       form: null,
@@ -302,7 +302,7 @@ describe("ClothEditor page", () => {
   });
 
   it("renders the load error state when no form is available", () => {
-    useClothEditorMock.mockReturnValue({
+    mockUseClothEditor.mockReturnValue({
       isCreateMode: false,
       isDeleteDialogOpen: false,
       form: null,

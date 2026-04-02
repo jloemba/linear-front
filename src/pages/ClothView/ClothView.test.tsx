@@ -5,10 +5,10 @@ import { LanguageProvider } from "../../context/Language/LanguageProvider";
 import { ThemeProvider } from "../../context/Theme/ThemeProvider";
 import { SnackbarProvider } from "../../context/Snackbar/SnackbarProvider";
 
-const useClothViewMock = vi.fn();
+const mockUseClothView = vi.fn();
 
 vi.mock("../../hooks/useClothView/useClothView", () => ({
-  default: (...args: unknown[]) => useClothViewMock(...args),
+  default: (...args: unknown[]) => mockUseClothView(...args),
 }));
 
 vi.mock("../../components/ClothGraphCanvas/ClothGraphCanvas", () => ({
@@ -91,7 +91,7 @@ describe("ClothView page", () => {
   });
 
   it("renders the loading state while the cloth is unavailable", () => {
-    useClothViewMock.mockReturnValue({
+    mockUseClothView.mockReturnValue({
       cloth: null,
       selectedNode: null,
       showLegend: true,
@@ -120,7 +120,7 @@ describe("ClothView page", () => {
     const closeDeleteDialog = vi.fn();
     const handleDelete = vi.fn();
 
-    useClothViewMock.mockReturnValue({
+    mockUseClothView.mockReturnValue({
       cloth: {
         id: "cloth-1",
         name: "Hip Hop Legacy",
