@@ -1,17 +1,15 @@
-﻿import { useEffect, useState } from "react";
+﻿import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
+import useLanguage from "../../hooks/useLanguage/useLanguage";
 import { fetchAllCloths } from "../../api/clothApi";
 import type { IClothSummary } from "../../types/cloth";
 import { CATEGORY_COLORS } from "../../utils/const";
 import useClothCategory from "../../hooks/useClothCategory/useClothCategory";
 import { formatDate, truncateText } from "../../utils/func";
 
-interface Props {
-  lang: "fr" | "en";
-}
-
-const Home = ({ lang }: Props) => {
+const Home = () => {
+  const { lang } = useLanguage();
   const [cloths, setCloths] = useState<IClothSummary[]>([]);
-  const [filtered, setFiltered] = useState<IClothSummary[]>([]);
   const [activeCategory] = useState("Tout");
   const [loading, setLoading] = useState(true);
   const { getCategoryFromName } = useClothCategory();
@@ -21,21 +19,20 @@ const Home = ({ lang }: Props) => {
       .then((data) => {
         const list: IClothSummary[] = data.graphs ?? [];
         setCloths(list);
-        setFiltered(list);
       })
       .catch((err) => console.error(err))
       .finally(() => setLoading(false));
   }, []);
 
-  useEffect(() => {
-    let result = cloths;
-    if (activeCategory !== "Tout") {
-      result = result.filter(
-        (g) => getCategoryFromName(g.name) === activeCategory,
-      );
+  const filtered = useMemo(() => {
+    if (activeCategory === "Tout") {
+      return cloths;
     }
-    setFiltered(result);
-  }, [activeCategory, cloths]);
+
+    return cloths.filter(
+      (g) => getCategoryFromName(g.name) === activeCategory,
+    );
+  }, [activeCategory, cloths, getCategoryFromName]);
 
   let content;
   const ellipsedText = (description: string|null) => {
@@ -49,11 +46,11 @@ const Home = ({ lang }: Props) => {
         {Array.from({ length: 4 }).map((_, i) => (
           <div key={i} className="flex gap-4 animate-pulse">
             <div className="flex-1">
-              <div className="h-3 bg-zinc-100 rounded w-20 mb-3" />
-              <div className="h-5 bg-zinc-100 rounded w-3/4 mb-2" />
-              <div className="h-4 bg-zinc-100 rounded w-1/2" />
+              <div className="mb-3 h-3 w-20 rounded bg-zinc-100 dark:bg-zinc-800" />
+              <div className="mb-2 h-5 w-3/4 rounded bg-zinc-100 dark:bg-zinc-800" />
+              <div className="h-4 w-1/2 rounded bg-zinc-100 dark:bg-zinc-800" />
             </div>
-            <div className="w-24 h-16 bg-zinc-100 rounded-lg shrink-0" />
+            <div className="h-16 w-24 shrink-0 rounded-lg bg-zinc-100 dark:bg-zinc-800" />
           </div>
         ))}
       </div>
@@ -61,17 +58,17 @@ const Home = ({ lang }: Props) => {
   } else if (filtered.length === 0) {
     content = (
       <div className="flex flex-col items-center justify-center py-32 text-center">
-        <p className="text-zinc-500 font-medium">
+        <p className="font-medium text-zinc-500 dark:text-zinc-300">
           {lang === "fr" ? "Aucune toile trouvée." : "No canvas found."}
         </p>
-        <p className="text-zinc-400 text-sm mt-1">
+        <p className="mt-1 text-sm text-zinc-400 dark:text-zinc-500">
           {lang === "fr" ? "Essaie un autre mot clé." : "Try another keyword."}
         </p>
       </div>
     );
   } else {
     content = (
-      <div className="flex flex-col divide-y divide-gray-100">
+      <div className="flex flex-col divide-y divide-gray-100 dark:divide-zinc-800">
         {filtered.map((cloth) => {
           const category = getCategoryFromName(cloth.name);
           return (
@@ -85,13 +82,13 @@ const Home = ({ lang }: Props) => {
                 >
                   {category}
                 </span>
-                <h2 className="text-xl font-bold text-zinc-900 leading-snug mb-2 group-hover:text-zinc-600 transition-colors">
+                <h2 className="mb-2 text-xl font-bold leading-snug text-zinc-900 transition-colors group-hover:text-zinc-600 dark:text-zinc-100 dark:group-hover:text-zinc-300">
                   <a href={`/cloth/${cloth.id}`} className="text-inherit no-underline">
                     {cloth.name}
                   </a>
                 </h2>
-                <p className="text-sm text-zinc-500 mb-4">{ellipsedText(cloth.description)}</p>
-                <div className="flex items-center gap-3 text-xs text-zinc-400">
+                <p className="mb-4 text-sm text-zinc-500 dark:text-zinc-400">{ellipsedText(cloth.description)}</p>
+                <div className="flex items-center gap-3 text-xs text-zinc-400 dark:text-zinc-500">
                   <span>
                     {lang === "fr"
                       ? `Publié le ${formatDate(cloth.createdAt, lang)}`
@@ -109,18 +106,25 @@ const Home = ({ lang }: Props) => {
   }
 
   return (
-    <div className="px-6 flex gap-12 pt-8 pb-20">
-      <main className="flex-1 min-w-0">
-        <div className="flex items-center gap-6 border-b border-gray-100 mb-8">
-          <button
-            className={`pb-3 text-sm font-medium border-b-2 transition-colors  border-zinc-300 text-zinc-700`}
-          >
-          🌐 Ton fil
-          </button>
-        </div>
+    <div className="px-4 pt-8 pb-20 sm:px-6 lg:px-8">
+      <div className="mx-auto flex w-full max-w-[1120px] justify-center">
+        <main className="min-w-0 w-full max-w-[720px]">
+          <div className="mb-8 flex items-center justify-between gap-6 border-b border-gray-100 dark:border-zinc-800">
+            <button className="border-b-2 border-zinc-300 pb-3 text-sm font-medium text-zinc-700 transition-colors dark:border-zinc-600 dark:text-zinc-100">
+              🌐 Ton fil
+            </button>
 
-        {content}
-      </main>
+            <Link
+              to="/cloth/new"
+              className="mb-3 rounded-full bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-500 dark:bg-emerald-500 dark:hover:bg-emerald-400"
+            >
+              {lang === "fr" ? "Créer une toile" : "Create cloth"}
+            </Link>
+          </div>
+
+          {content}
+        </main>
+      </div>
     </div>
   );
 };

@@ -15,8 +15,8 @@ const ClothQuickNavigation = ({
   getPropertyCountLabel,
 }: Props) => (
   <section className={`${panelClassName} overflow-hidden`}>
-    <div className="border-b border-stone-200 px-6 py-5">
-      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-stone-500">
+    <div className="border-b border-stone-200 px-6 py-5 dark:border-zinc-800">
+      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-stone-500 dark:text-zinc-500">
         {editor.quickNodeAccess}
       </p>
     </div>
@@ -27,17 +27,17 @@ const ClothQuickNavigation = ({
           key={`anchor-${node.id}`}
           type="button"
           onClick={() => onScrollToNode(node.id)}
-          className="flex w-full items-center justify-between rounded-2xl border border-stone-200 bg-white px-4 py-3 text-left transition hover:border-amber-300 hover:bg-amber-50"
+          className="flex w-full items-center justify-between rounded-2xl border border-stone-200 bg-white px-4 py-3 text-left transition hover:border-amber-300 hover:bg-amber-50 dark:border-zinc-800 dark:bg-zinc-950 dark:hover:border-amber-700 dark:hover:bg-amber-950/20"
         >
           <span className="min-w-0">
-            <span className="block text-xs font-semibold uppercase tracking-[0.18em] text-stone-400">
+            <span className="block text-xs font-semibold uppercase tracking-[0.18em] text-stone-400 dark:text-zinc-500">
               {`${editor.node} ${nodeIndex + 1}`}
             </span>
-            <span className="mt-1 block truncate text-sm font-medium text-stone-800">
+            <span className="mt-1 block truncate text-sm font-medium text-stone-800 dark:text-zinc-100">
               {node.label.trim() || editor.newNode}
             </span>
           </span>
-          <span className="ml-3 rounded-full bg-stone-100 px-2.5 py-1 text-xs font-semibold text-stone-500">
+          <span className="ml-3 rounded-full bg-stone-100 px-2.5 py-1 text-xs font-semibold text-stone-500 dark:bg-zinc-800 dark:text-zinc-300">
             {getPropertyCountLabel(node.properties.length)}
           </span>
         </button>

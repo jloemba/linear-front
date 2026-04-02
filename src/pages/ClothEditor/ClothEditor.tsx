@@ -1,4 +1,6 @@
 ﻿import { Link, useParams } from "react-router-dom";
+import ConfirmDialog from "../../components/ConfirmDialog/ConfirmDialog";
+import useLanguage from "../../hooks/useLanguage/useLanguage";
 import { getClothMessages } from "../../i18n/cloth";
 import ClothIdentitySection from "./ClothIdentitySection/ClothIdentitySection";
 import ClothNodesSection from "./ClothNodesSection/ClothNodesSection";
@@ -7,19 +9,17 @@ import ClothQuickNavigation from "./ClothQuickNavigation/ClothQuickNavigation";
 import ClothRelationshipsSection from "./ClothRelationshipsSection/ClothRelationshipsSection";
 import useClothEditor from "../../hooks/useClothEditor/useClothEditor";
 
-interface Props {
-  lang: "fr" | "en";
-}
-
-const ClothEditor = ({ lang }: Props) => {
+const ClothEditor = () => {
+  const { lang } = useLanguage();
   const { common, editor } = getClothMessages(lang);
   const { id } = useParams<{ id: string }>();
   const {
+    isCreateMode,
+    isDeleteDialogOpen,
     form,
     loading,
     saving,
     error,
-    successMessage,
     nodeOptions,
     collapsedNodeIds,
     isNodesSectionCollapsed,
@@ -40,6 +40,9 @@ const ClothEditor = ({ lang }: Props) => {
     handleRemoveRelationship,
     scrollToNode,
     handleSubmit,
+    openDeleteDialog,
+    closeDeleteDialog,
+    handleDelete,
   } = useClothEditor({
     id,
     lang,
@@ -53,10 +56,10 @@ const ClothEditor = ({ lang }: Props) => {
         <div className="mx-auto max-w-7xl animate-pulse space-y-6">
           <div className="grid gap-6 lg:grid-cols-[1.65fr_0.95fr]">
             <div className="space-y-6">
-              <div className="h-60 rounded-[28px] bg-white" />
-              <div className="h-96 rounded-[28px] bg-white" />
+              <div className="h-60 rounded-[28px] bg-white dark:bg-zinc-900" />
+              <div className="h-96 rounded-[28px] bg-white dark:bg-zinc-900" />
             </div>
-            <div className="h-[420px] rounded-[28px] bg-white" />
+            <div className="h-[420px] rounded-[28px] bg-white dark:bg-zinc-900" />
           </div>
         </div>
       </div>
@@ -66,9 +69,8 @@ const ClothEditor = ({ lang }: Props) => {
   if (!form) {
     return (
       <div className="px-6 py-16">
-        <div className="mx-auto max-w-xl rounded-[28px] border border-red-200 bg-red-50 px-6 py-8 text-red-700">
-          {error ??
-            editor.notFound}
+        <div className="mx-auto max-w-xl rounded-[28px] border border-red-200 bg-red-50 px-6 py-8 text-red-700 dark:border-red-900/70 dark:bg-red-950/40 dark:text-red-300">
+          {error ?? editor.notFound}
         </div>
       </div>
     );
@@ -79,27 +81,31 @@ const ClothEditor = ({ lang }: Props) => {
       <form onSubmit={handleSubmit} className="mx-auto max-w-7xl">
         <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-3xl">
-            <h1 className="text-4xl font-semibold tracking-tight text-stone-900">
-              {editor.title}
+            <h1 className="text-4xl font-semibold tracking-tight text-stone-900 dark:text-zinc-100">
+              {isCreateMode ? editor.createTitle : editor.title}
             </h1>
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
             <Link
               to={id ? `/cloth/${id}` : "/"}
-              className="rounded-full border border-stone-300 bg-white px-4 py-2 text-sm font-medium text-stone-700 transition hover:border-stone-400 hover:text-stone-900"
+              className="rounded-full border border-stone-300 bg-white px-4 py-2 text-sm font-medium text-stone-700 transition hover:border-stone-400 hover:text-stone-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:border-zinc-600 dark:hover:text-zinc-100"
             >
-              {editor.backToCloth}
+              {isCreateMode ? editor.backToHome : editor.backToCloth}
             </Link>
-            <button
-              type="submit"
-              disabled={saving}
-              className="rounded-full bg-stone-900 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-stone-700 disabled:cursor-not-allowed disabled:bg-stone-400"
-            >
-              {saving
-                ? editor.saving
-                : editor.saveChanges}
-            </button>
+
+            {!isCreateMode && (
+              <button
+                type="button"
+                onClick={() => {
+                  openDeleteDialog();
+                }}
+                disabled={saving}
+                className="rounded-full border border-red-200 bg-red-50 px-4 py-2 text-sm font-medium text-red-700 transition hover:border-red-300 hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-60 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-300 dark:hover:bg-red-950/60"
+              >
+                {editor.deleteGraph}
+              </button>
+            )}
           </div>
         </div>
 
@@ -164,9 +170,9 @@ const ClothEditor = ({ lang }: Props) => {
             <ClothPreviewPanel
               form={form}
               lang={lang}
+              isCreateMode={isCreateMode}
               saving={saving}
               error={error}
-              successMessage={successMessage}
               onSubmit={() => {
                 void handleSubmit();
               }}
@@ -174,6 +180,19 @@ const ClothEditor = ({ lang }: Props) => {
           </aside>
         </div>
       </form>
+
+      <ConfirmDialog
+        open={isDeleteDialogOpen}
+        title={common.confirmDeletion}
+        description={editor.deleteConfirm}
+        confirmLabel={editor.deleteGraph}
+        cancelLabel={common.cancel}
+        isLoading={saving}
+        onCancel={closeDeleteDialog}
+        onConfirm={() => {
+          void handleDelete();
+        }}
+      />
     </div>
   );
 };

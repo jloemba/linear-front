@@ -1,4 +1,7 @@
 ﻿import { useState } from "react";
+import { getClothMessages } from "../../i18n/cloth";
+import useLanguage from "../../hooks/useLanguage/useLanguage";
+import useTheme from "../../hooks/useTheme/useTheme";
 
 interface HeaderAction {
   label: string;
@@ -7,8 +10,6 @@ interface HeaderAction {
 }
 
 interface Props {
-  lang: "fr" | "en";
-  onToggleLang: () => void;
   onSearch?: (query: string) => void;
   showSearch?: boolean;
   title?: string;
@@ -18,8 +19,6 @@ interface Props {
 }
 
 const Header = ({
-  lang,
-  onToggleLang,
   onSearch,
   showSearch = false,
   title,
@@ -28,15 +27,20 @@ const Header = ({
   actions = [],
 }: Props) => {
   const [query, setQuery] = useState("");
+  const { lang, toggleLang } = useLanguage();
+  const { theme, toggleTheme } = useTheme();
+  const { common } = getClothMessages(lang);
+  const themeLabel =
+    theme === "dark" ? common.switchToLightMode : common.switchToDarkMode;
 
   return (
-    <header className="sticky top-0 z-50 bg-white border-b border-gray-200">
-      <div className="w-full max-w-7xl h-14 flex items-center justify-between gap-6">
+    <header className="sticky top-0 z-50 border-b border-gray-200 bg-white dark:border-zinc-800 dark:bg-zinc-950">
+      <div className="h-14 w-full max-w-7xl items-center justify-between gap-6 px-4 flex sm:px-6 lg:px-8">
         <div className="flex items-center gap-3 shrink-0">
           {onToggleSidebar && (
             <button
               onClick={onToggleSidebar}
-              className="p-2 rounded-lg text-zinc-400 hover:text-zinc-900 hover:bg-zinc-50 transition-colors"
+              className="rounded-lg p-2 text-zinc-400 transition-colors hover:bg-zinc-50 hover:text-zinc-900 dark:hover:bg-zinc-900 dark:hover:text-zinc-100"
             >
               <svg
                 className="w-5 h-5"
@@ -58,7 +62,7 @@ const Header = ({
             <>
               <button
                 onClick={onBack}
-                className="text-zinc-500 hover:text-zinc-900 transition-colors text-sm"
+                className="text-sm text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
               >
                 <svg
                   className="w-4 h-4"
@@ -84,14 +88,14 @@ const Header = ({
               <div className="w-7 h-7 bg-zinc-900 rounded-md flex items-center justify-center">
                 <span className="text-white text-xs font-bold">K</span>
               </div>
-              <span className="text-zinc-900 font-semibold text-lg tracking-tight">
+              <span className="text-lg font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
                 Knoyeba
               </span>
             </div>
           )}
 
           {title && (
-            <h1 className="text-sm font-semibold text-zinc-900 truncate max-w-xs">
+            <h1 className="max-w-xs truncate text-sm font-semibold text-zinc-900 dark:text-zinc-100">
               {title}
             </h1>
           )}
@@ -125,21 +129,30 @@ const Header = ({
                   setQuery(e.target.value);
                   onSearch(e.target.value);
                 }}
-                className="w-full pl-9 pr-4 py-1.5 bg-gray-50 border border-gray-200 rounded-full text-sm text-zinc-900 placeholder-gray-400 focus:outline-none focus:border-zinc-400 transition-colors"
+                className="w-full rounded-full border border-gray-200 bg-gray-50 py-1.5 pl-9 pr-4 text-sm text-zinc-900 placeholder-gray-400 transition-colors focus:border-zinc-400 focus:outline-none dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder-zinc-500 dark:focus:border-zinc-600"
               />
             </div>
           </div>
         )}
 
         <div className="flex items-center gap-4 shrink-0">
+          <button
+            onClick={toggleTheme}
+            className="rounded-full border border-zinc-200 px-3 py-1.5 text-xs font-semibold text-zinc-500 transition-colors hover:border-zinc-300 hover:text-zinc-900 dark:border-zinc-800 dark:text-zinc-300 dark:hover:border-zinc-700 dark:hover:text-zinc-100"
+            aria-label={themeLabel}
+            title={themeLabel}
+          >
+            {theme === "dark" ? "☀︎" : "☾"}
+          </button>
+
           {actions.map((action) => (
             <button
               key={action.label}
               onClick={action.onClick}
               className={`text-sm font-medium transition-colors ${
                 action.variant === "outlined"
-                  ? "border border-zinc-200 text-zinc-700 px-4 py-1.5 rounded-full hover:bg-zinc-50"
-                  : "text-zinc-600 hover:text-zinc-900"
+                  ? "rounded-full border border-zinc-200 px-4 py-1.5 text-zinc-700 hover:bg-zinc-50 dark:border-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-900"
+                  : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
               }`}
             >
               {action.label}
@@ -147,8 +160,8 @@ const Header = ({
           ))}
 
           <button
-            onClick={onToggleLang}
-            className="rounded-full border border-zinc-200 px-3 py-1.5 text-xs font-semibold text-zinc-500 transition-colors hover:border-zinc-300 hover:text-zinc-900"
+            onClick={toggleLang}
+            className="rounded-full border border-zinc-200 px-3 py-1.5 text-xs font-semibold text-zinc-500 transition-colors hover:border-zinc-300 hover:text-zinc-900 dark:border-zinc-800 dark:text-zinc-300 dark:hover:border-zinc-700 dark:hover:text-zinc-100"
           >
             {lang === "fr" ? "EN" : "FR"}
           </button>

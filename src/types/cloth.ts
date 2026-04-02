@@ -50,3 +50,5 @@ export interface IClothUpdatePayload {
   nodes: IClothNode[];
   relationships: IClothRelationship[];
 }
+
+export type IClothCreatePayload = IClothUpdatePayload;

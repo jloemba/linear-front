@@ -1,5 +1,11 @@
 import { type FormEvent, useEffect, useMemo, useState } from "react";
-import { fetchClothById, updateClothById } from "../../api/clothApi";
+import { useNavigate } from "react-router-dom";
+import {
+  createCloth,
+  deleteClothById,
+  fetchClothById,
+  updateClothById,
+} from "../../api/clothApi";
 import type {
   IClothNode,
   IClothRelationship,
@@ -8,6 +14,7 @@ import type {
   PropertyValueType,
 } from "../../types/cloth";
 import {
+  createEmptyClothPayload,
   createEmptyNode,
   createEmptyProperty,
   createEmptyRelationship,
@@ -16,6 +23,7 @@ import {
   validateClothPayload,
 } from "../../utils/clothForm";
 import type { ClothCommonMessages, ClothEditorMessages } from "../../pages/ClothEditor/clothEditorUi";
+import useSnackbar from "../useSnackbar/useSnackbar";
 
 interface Props {
   id?: string;
@@ -30,18 +38,26 @@ export default function useClothEditor({
   common,
   editor,
 }: Props) {
+  const navigate = useNavigate();
+  const { showSnackbar } = useSnackbar();
   const [form, setForm] = useState<IClothUpdatePayload | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [collapsedNodeIds, setCollapsedNodeIds] = useState<string[]>([]);
   const [isNodesSectionCollapsed, setIsNodesSectionCollapsed] = useState(false);
   const [isRelationshipsSectionCollapsed, setIsRelationshipsSectionCollapsed] =
     useState(false);
+  const isCreateMode = !id;
 
   useEffect(() => {
-    if (!id) return;
+    if (!id) {
+      setForm(createEmptyClothPayload());
+      setCollapsedNodeIds([]);
+      setLoading(false);
+      return;
+    }
 
     setLoading(true);
     setError(null);
@@ -74,7 +90,6 @@ export default function useClothEditor({
       return updater(current);
     });
     setError(null);
-    setSuccessMessage(null);
   };
 
   const updateClothField = (
@@ -230,7 +245,7 @@ export default function useClothEditor({
 
   const handleSubmit = async (event?: FormEvent<HTMLFormElement>) => {
     event?.preventDefault();
-    if (!id || !form) return;
+    if (!form) return;
     const sanitizedPayload = sanitizeClothPayload(form);
     const validationErrors = validateClothPayload(sanitizedPayload, lang);
 
@@ -241,25 +256,84 @@ export default function useClothEditor({
 
     setSaving(true);
     setError(null);
-    setSuccessMessage(null);
 
     try {
-      const updatedCloth = await updateClothById(id, sanitizedPayload);
-      setForm(normalizeClothForForm(updatedCloth));
-      setSuccessMessage(editor.saveSuccess);
+      if (id) {
+        const updatedCloth = await updateClothById(id, sanitizedPayload);
+        setForm(normalizeClothForForm(updatedCloth));
+        showSnackbar({
+          message: editor.saveSuccess,
+          type: "success",
+        });
+      } else {
+        const createdCloth = await createCloth(sanitizedPayload);
+        setForm(normalizeClothForForm(createdCloth));
+        showSnackbar({
+          message: editor.createSuccess,
+          type: "success",
+        });
+        navigate(`/cloth/${createdCloth.id}/edit`, { replace: true });
+      }
     } catch {
-      setError(editor.saveError);
+      showSnackbar({
+        message: id ? editor.saveError : editor.createError,
+        type: "error",
+      });
     } finally {
       setSaving(false);
     }
   };
 
+  const openDeleteDialog = () => {
+    if (!id) {
+      navigate("/");
+      return;
+    }
+
+    setIsDeleteDialogOpen(true);
+  };
+
+  const closeDeleteDialog = () => {
+    if (saving) return;
+    setIsDeleteDialogOpen(false);
+  };
+
+  const handleDelete = async () => {
+    if (!id) {
+      navigate("/");
+      return;
+    }
+
+    setSaving(true);
+    setError(null);
+
+    try {
+      await deleteClothById(id);
+      setIsDeleteDialogOpen(false);
+      showSnackbar({
+        message: editor.deleteSuccess,
+        type: "success",
+      });
+      navigate("/", {
+        replace: true,
+      });
+    } catch {
+      showSnackbar({
+        message: editor.deleteError,
+        type: "error",
+      });
+      setSaving(false);
+    }
+  };
+
   return {
+    id,
+    isCreateMode,
+    isDeleteDialogOpen,
     form,
     loading,
     saving,
     error,
-    successMessage,
     nodeOptions,
     collapsedNodeIds,
     isNodesSectionCollapsed,
@@ -280,5 +354,8 @@ export default function useClothEditor({
     handleRemoveRelationship,
     scrollToNode,
     handleSubmit,
+    openDeleteDialog,
+    closeDeleteDialog,
+    handleDelete,
   };
 }

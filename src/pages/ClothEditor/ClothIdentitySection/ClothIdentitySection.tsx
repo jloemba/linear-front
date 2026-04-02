@@ -14,8 +14,8 @@ interface Props {
 
 const ClothIdentitySection = ({ form, editor, onUpdateField }: Props) => (
   <section className={`${panelClassName} overflow-hidden`}>
-    <div className="border-b border-stone-200 px-6 py-5">
-      <h2 className="mt-2 text-2xl font-semibold text-stone-900">
+    <div className="border-b border-stone-200 px-6 py-5 dark:border-zinc-800">
+      <h2 className="mt-2 text-2xl font-semibold text-stone-900 dark:text-zinc-100">
         {editor.clothInformation}
       </h2>
     </div>

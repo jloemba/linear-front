@@ -19,7 +19,7 @@ const ClothNodeDetailsPanel = ({
   onClose,
   onSelectNode,
 }: Props) => (
-  <aside className="shrink-0 bg-white border-l border-gray-200 overflow-y-auto position-absolute w-80">
+  <aside className="position-absolute w-80 shrink-0 overflow-y-auto border-l border-gray-200 bg-white dark:border-zinc-800 dark:bg-zinc-950">
     <div className="p-6">
       <div className="flex items-start justify-between mb-4">
         <span
@@ -30,7 +30,7 @@ const ClothNodeDetailsPanel = ({
         </span>
         <button
           onClick={onClose}
-          className="text-zinc-400 hover:text-zinc-900 transition-colors"
+          className="text-zinc-400 transition-colors hover:text-zinc-900 dark:text-zinc-500 dark:hover:text-zinc-100"
         >
           <svg
             className="w-4 h-4"
@@ -48,22 +48,22 @@ const ClothNodeDetailsPanel = ({
         </button>
       </div>
 
-      <h2 className="text-xl font-bold text-zinc-900 mb-6">
+      <h2 className="mb-6 text-xl font-bold text-zinc-900 dark:text-zinc-100">
         {selectedNode.label}
       </h2>
 
       {selectedNode.properties.length > 0 && (
         <div className="mb-6">
-          <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-3">
+          <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
             {informationLabel}
           </h3>
           <div className="flex flex-col gap-3">
             {selectedNode.properties.map((prop) => (
               <div key={prop.name} className="flex flex-col gap-0.5">
-                <span className="text-xs font-medium text-zinc-400 capitalize">
+                <span className="text-xs font-medium capitalize text-zinc-400 dark:text-zinc-500">
                   {prop.name.replaceAll("_", " ")}
                 </span>
-                <span className="text-sm text-zinc-900 leading-relaxed">
+                <span className="text-sm leading-relaxed text-zinc-900 dark:text-zinc-100">
                   {getPropertyDisplayValue(prop, cloth.nodes) || "—"}
                 </span>
               </div>
@@ -73,11 +73,11 @@ const ClothNodeDetailsPanel = ({
       )}
 
       {selectedNode.properties.length > 0 && (
-        <div className="border-t border-gray-100 mb-6" />
+        <div className="mb-6 border-t border-gray-100 dark:border-zinc-800" />
       )}
 
       <div>
-        <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-3">
+        <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
           {relationshipsLabel}
         </h3>
         <div className="flex flex-col gap-2">
@@ -96,18 +96,18 @@ const ClothNodeDetailsPanel = ({
                 <div
                   key={relationship.id}
                   onClick={() => onSelectNode(otherId)}
-                  className="flex items-center gap-2 p-3 bg-zinc-50 rounded-xl text-sm cursor-pointer hover:bg-zinc-100 transition-colors"
+                  className="flex cursor-pointer items-center gap-2 rounded-xl bg-zinc-50 p-3 text-sm transition-colors hover:bg-zinc-100 dark:bg-zinc-900 dark:hover:bg-zinc-800"
                 >
                   <span
-                    className={`shrink-0 text-xs font-medium px-2 py-0.5 rounded-full ${isFrom ? "bg-zinc-900 text-white" : "bg-zinc-100 text-zinc-600"}`}
+                      className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-medium ${isFrom ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900" : "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300"}`}
                   >
                     {isFrom ? "→" : "←"}
                   </span>
                   <div className="flex flex-col min-w-0">
-                    <span className="text-zinc-400 text-xs truncate">
+                    <span className="truncate text-xs text-zinc-400 dark:text-zinc-500">
                       {relationship.type}
                     </span>
-                    <span className="text-zinc-900 font-medium truncate">
+                    <span className="truncate font-medium text-zinc-900 dark:text-zinc-100">
                       {otherNode?.label}
                     </span>
                   </div>

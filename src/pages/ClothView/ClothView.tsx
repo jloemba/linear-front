@@ -1,16 +1,15 @@
 import ClothGraphCanvas from "../../components/ClothGraphCanvas/ClothGraphCanvas";
+import ConfirmDialog from "../../components/ConfirmDialog/ConfirmDialog";
 import { useParams } from "react-router-dom";
+import useLanguage from "../../hooks/useLanguage/useLanguage";
 import { getClothMessages } from "../../i18n/cloth";
 import ClothNodeDetailsPanel from "./ClothNodeDetailsPanel/ClothNodeDetailsPanel";
 import ClothViewHeader from "./ClothViewHeader/ClothViewHeader";
 import ClothViewLegend from "./ClothViewLegend/ClothViewLegend";
 import useClothView from "../../hooks/useClothView/useClothView";
 
-interface Props {
-  lang: "fr" | "en";
-}
-
-const ClothView = ({ lang }: Props) => {
+const ClothView = () => {
+  const { lang } = useLanguage();
   const { common, view } = getClothMessages(lang);
   const { id } = useParams<{ id: string }>();
   const {
@@ -18,15 +17,23 @@ const ClothView = ({ lang }: Props) => {
     selectedNode,
     showLegend,
     descriptionOpen,
+    isDeleteDialogOpen,
     setSelectedNode,
     setShowLegend,
     setDescriptionOpen,
     handleSelectNode,
-  } = useClothView({ id });
+    openDeleteDialog,
+    closeDeleteDialog,
+    handleDelete,
+  } = useClothView({
+    id,
+    deleteSuccessMessage: view.deleteSuccess,
+    deleteErrorMessage: view.deleteError,
+  });
   const nodeTypes = cloth ? [...new Set(cloth.nodes.map((node) => node.type))] : [];
 
   return (
-    <div className="h-screen flex flex-col bg-zinc-50">
+    <div className="flex h-screen flex-col bg-zinc-50 dark:bg-zinc-950">
       {cloth && (
         <ClothViewHeader
           clothId={cloth.id}
@@ -37,11 +44,15 @@ const ClothView = ({ lang }: Props) => {
           publishedOnLabel={view.publishedOn}
           authorLabel={view.author}
           editClothLabel={view.editCloth}
+          deleteClothLabel={view.deleteCloth}
           hideDescriptionLabel={view.hideDescription}
           aboutThisClothLabel={view.aboutThisCloth}
           noDescriptionLabel={common.noDescription}
           descriptionOpen={descriptionOpen}
           onToggleDescription={() => setDescriptionOpen((current) => !current)}
+          onDelete={() => {
+            openDeleteDialog();
+          }}
         />
       )}
 
@@ -79,6 +90,7 @@ const ClothView = ({ lang }: Props) => {
               className="w-full h-full"
             />
           )}
+
         </div>
 
         {cloth && selectedNode && (
@@ -92,6 +104,18 @@ const ClothView = ({ lang }: Props) => {
           />
         )}
       </div>
+
+      <ConfirmDialog
+        open={isDeleteDialogOpen}
+        title={common.confirmDeletion}
+        description={view.deleteConfirm}
+        confirmLabel={view.deleteCloth}
+        cancelLabel={common.cancel}
+        onCancel={closeDeleteDialog}
+        onConfirm={() => {
+          void handleDelete();
+        }}
+      />
     </div>
   );
 };

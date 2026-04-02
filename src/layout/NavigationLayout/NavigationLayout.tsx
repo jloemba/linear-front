@@ -1,55 +1,44 @@
-﻿import { Outlet } from "react-router-dom";
+﻿import { useState } from "react";
+import { Outlet } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import useLanguage from "../../hooks/useLanguage/useLanguage";
 
 import Header from "../Header/Header";
 
-const NavigationLayout = ({
-  sidebarOpen,
-  onToggleSidebar,
-  lang,
-  onToggleLang,
-}: {
-  sidebarOpen: boolean;
-  onToggleSidebar: () => void;
-  lang: "fr" | "en";
-  onToggleLang: () => void;
-}) => {
-  
+const NavigationLayout = () => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { lang } = useLanguage();
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen w-full bg-white">
-      <Header
-        lang={lang}
-        onToggleLang={onToggleLang}
-        onToggleSidebar={onToggleSidebar}
-      />
+    <div className="min-h-screen w-full bg-white dark:bg-zinc-950">
+      <Header onToggleSidebar={() => setSidebarOpen((current) => !current)} />
       <div className="flex">
         <aside
-          className={`shrink-0 fixed top-14 left-0 h-[calc(100vh-3.5rem)] border-r border-gray-100 z-20 bg-white transition-all duration-300 overflow-hidden ${
+          className={`fixed left-0 top-14 z-20 h-[calc(100vh-3.5rem)] shrink-0 overflow-hidden border-r border-gray-100 bg-white transition-all duration-300 dark:border-zinc-800 dark:bg-zinc-950 ${
             sidebarOpen ? "w-56" : "w-0"
           }`}
         >
           <div className="w-56 overflow-y-auto h-full">
             <nav className="sticky top-14 w-56 p-4">
-              <p className="text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-4">
+              <p className="mb-4 text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
                 {lang === "fr" ? "Navigation" : "Browse"}
               </p>
               <ul className="flex flex-col gap-1">
                   <li>
-                    <button onClick={() => navigate(`/`)} className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-zinc-500 hover:bg-zinc-50 hover:text-zinc-800 transition-colors text-left">
+                    <button onClick={() => navigate(`/`)} className="w-full rounded-lg px-3 py-2 text-left text-sm text-zinc-500 transition-colors hover:bg-zinc-50 hover:text-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-900 dark:hover:text-zinc-100">
                       {lang === "fr" ? "Accueil" : "Home"}
                     </button>
                   </li>
                     <li>
-                    <button onClick={() => navigate(`/`)} className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-zinc-500 hover:bg-zinc-50 hover:text-zinc-800 transition-colors text-left">
+                    <button onClick={() => navigate(`/`)} className="w-full rounded-lg px-3 py-2 text-left text-sm text-zinc-500 transition-colors hover:bg-zinc-50 hover:text-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-900 dark:hover:text-zinc-100">
                       {lang === "fr" ? "Profil" : "Profile"}
                     </button>
                   </li>
       
               </ul>
 
-              <div className="border-t border-gray-100 my-4" />
+              <div className="my-4 border-t border-gray-100 dark:border-zinc-800" />
 
             </nav>
           </div>
@@ -60,7 +49,7 @@ const NavigationLayout = ({
             sidebarOpen ? "lg:ml-56" : "lg:ml-0"
           }`}
         >
-          <Outlet context={{ lang, sidebarOpen }} />
+          <Outlet context={{ sidebarOpen }} />
         </main>
       </div>
     </div>

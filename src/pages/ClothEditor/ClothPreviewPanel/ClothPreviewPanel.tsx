@@ -4,26 +4,26 @@ import { getClothMessages } from "../../../i18n/cloth";
 import type { IClothUpdatePayload } from "../../../types/cloth";
 
 const panelClassName =
-  "rounded-[28px] border border-stone-200 bg-white/90 shadow-[0_18px_60px_rgba(68,64,60,0.08)] backdrop-blur";
+  "rounded-[28px] border border-stone-200 bg-white/90 shadow-[0_18px_60px_rgba(68,64,60,0.08)] backdrop-blur dark:border-zinc-800 dark:bg-zinc-900/90 dark:shadow-[0_18px_60px_rgba(0,0,0,0.35)]";
 
 interface Props {
   form: IClothUpdatePayload;
   lang: "fr" | "en";
+  isCreateMode: boolean;
   saving: boolean;
   error: string | null;
-  successMessage: string | null;
   onSubmit: () => void;
 }
 
 const ClothPreviewPanel = ({
   form,
   lang,
+  isCreateMode,
   saving,
   error,
-  successMessage,
   onSubmit,
 }: Props) => {
-  const { preview } = getClothMessages(lang);
+  const { editor, preview } = getClothMessages(lang);
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const activeSelectedNodeId = form.nodes.some(
@@ -59,10 +59,10 @@ const ClothPreviewPanel = ({
         </div>
 
         <div className="space-y-4 p-4">
-          <div className="overflow-hidden rounded-[24px] border border-stone-200 bg-white">
-            <div className="flex items-center justify-between gap-4 border-b border-stone-200 px-4 py-3">
+          <div className="overflow-hidden rounded-[24px] border border-stone-200 bg-white dark:border-zinc-800 dark:bg-zinc-950">
+            <div className="flex items-center justify-between gap-4 border-b border-stone-200 px-4 py-3 dark:border-zinc-800">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-stone-500">
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-stone-500 dark:text-zinc-400">
                   {preview.canvas}
                 </p>
               </div>
@@ -70,7 +70,7 @@ const ClothPreviewPanel = ({
               <button
                 type="button"
                 onClick={() => setIsFullscreen(true)}
-                className="rounded-full border border-stone-300 bg-white px-4 py-2 text-sm font-medium text-stone-700 transition hover:border-stone-400 hover:text-stone-900"
+                className="rounded-full border border-stone-300 bg-white px-4 py-2 text-sm font-medium text-stone-700 transition hover:border-stone-400 hover:text-stone-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:border-zinc-600 dark:hover:text-zinc-100"
               >
                 {preview.fullscreenMode}
               </button>
@@ -81,19 +81,13 @@ const ClothPreviewPanel = ({
               variant="editor"
               selectedNodeId={activeSelectedNodeId}
               onSelectNode={setSelectedNodeId}
-              className="h-64 w-full bg-stone-50"
+              className="h-64 w-full bg-stone-50 dark:bg-zinc-900"
             />
           </div>
 
           {error && (
-            <div className="rounded-[20px] border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+            <div className="rounded-[20px] border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-300">
               {error}
-            </div>
-          )}
-
-          {successMessage && (
-            <div className="rounded-[20px] border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
-              {successMessage}
             </div>
           )}
 
@@ -106,7 +100,9 @@ const ClothPreviewPanel = ({
             >
               {saving
                 ? preview.saveInProgress
-                : preview.saveChanges}
+                : isCreateMode
+                  ? editor.createGraph
+                  : preview.saveChanges}
             </button>
           </div>
         </div>

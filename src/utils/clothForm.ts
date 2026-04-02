@@ -1,4 +1,5 @@
 ﻿import type {
+  IClothCreatePayload,
   IClothDetail,
   IClothNode,
   IClothRelationship,
@@ -34,6 +35,14 @@ export const createEmptyRelationship = (): IClothRelationship => ({
   type: "",
   startDate: null,
   endDate: null,
+});
+
+export const createEmptyClothPayload = (): IClothCreatePayload => ({
+  name: "",
+  type: FALLBACK_CLOTH_TYPE,
+  description: "",
+  nodes: [createEmptyNode()],
+  relationships: [],
 });
 
 export const normalizeProperty = (property: IPropertyView): IPropertyView => {
