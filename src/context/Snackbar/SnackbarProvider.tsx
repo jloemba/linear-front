@@ -1,9 +1,9 @@
 import { type PropsWithChildren, useEffect, useMemo, useState } from "react";
-import Snackbar from "../components/Snackbar/Snackbar";
+import Snackbar from "../../components/Snackbar/Snackbar";
 import SnackbarContext, {
   type SnackbarContextValue,
   type SnackbarState,
-} from "./Snackbar/snackbarContext";
+} from "./snackbarContext";
 
 const SNACKBAR_DURATION = 4000;
 
