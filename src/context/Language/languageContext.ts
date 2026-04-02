@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import type { AppLang } from "../i18n/cloth";
+import type { AppLang } from "../../i18n/cloth";
 
 export interface LanguageContextValue {
   lang: AppLang;

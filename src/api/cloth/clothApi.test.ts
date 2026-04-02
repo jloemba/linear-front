@@ -12,7 +12,7 @@ describe("clothApi", () => {
   });
 
   it("fetches all cloths", async () => {
-    vi.spyOn(global, "fetch").mockResolvedValue(
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
       new Response(JSON.stringify({ graphs: [] }), {
         status: 200,
         headers: { "Content-Type": "application/json" },
@@ -26,7 +26,7 @@ describe("clothApi", () => {
   });
 
   it("fetches a cloth by id", async () => {
-    vi.spyOn(global, "fetch").mockResolvedValue(
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
       new Response(
         JSON.stringify({
           id: "cloth-1",
@@ -51,7 +51,7 @@ describe("clothApi", () => {
   });
 
   it("updates a cloth", async () => {
-    vi.spyOn(global, "fetch").mockResolvedValue(
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
       new Response(
         JSON.stringify({
           id: "cloth-1",
@@ -86,7 +86,7 @@ describe("clothApi", () => {
   });
 
   it("creates a cloth", async () => {
-    vi.spyOn(global, "fetch").mockResolvedValue(
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
       new Response(
         JSON.stringify({
           id: "cloth-1",
@@ -121,7 +121,7 @@ describe("clothApi", () => {
   });
 
   it("deletes a cloth", async () => {
-    vi.spyOn(global, "fetch").mockResolvedValue(
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
       new Response(null, { status: 204 }),
     );
 
@@ -133,7 +133,7 @@ describe("clothApi", () => {
   });
 
   it("throws when fetchAllCloths fails", async () => {
-    vi.spyOn(global, "fetch").mockResolvedValue(
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
       new Response(null, { status: 500 }),
     );
 
@@ -141,7 +141,7 @@ describe("clothApi", () => {
   });
 
   it("throws when createCloth fails", async () => {
-    vi.spyOn(global, "fetch").mockResolvedValue(
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
       new Response("create failed", { status: 400 }),
     );
 
@@ -157,7 +157,7 @@ describe("clothApi", () => {
   });
 
   it("throws when fetchClothById fails", async () => {
-    vi.spyOn(global, "fetch").mockResolvedValue(
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
       new Response(null, { status: 404 }),
     );
 
@@ -168,7 +168,7 @@ describe("clothApi", () => {
 
   it("refetches the cloth when update returns 204", async () => {
     const fetchSpy = vi
-      .spyOn(global, "fetch")
+      .spyOn(globalThis, "fetch")
       .mockResolvedValueOnce(new Response(null, { status: 204 }))
       .mockResolvedValueOnce(
         new Response(
@@ -205,7 +205,7 @@ describe("clothApi", () => {
 
   it("refetches the cloth when update returns non-json content", async () => {
     const fetchSpy = vi
-      .spyOn(global, "fetch")
+      .spyOn(globalThis, "fetch")
       .mockResolvedValueOnce(
         new Response("ok", {
           status: 200,
@@ -246,7 +246,7 @@ describe("clothApi", () => {
   });
 
   it("throws when createCloth returns no content", async () => {
-    vi.spyOn(global, "fetch").mockResolvedValue(new Response(null, { status: 204 }));
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(null, { status: 204 }));
 
     await expect(
       createCloth({
@@ -260,7 +260,7 @@ describe("clothApi", () => {
   });
 
   it("throws when deleteClothById fails", async () => {
-    vi.spyOn(global, "fetch").mockResolvedValue(
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
       new Response("delete failed", { status: 500 }),
     );
 

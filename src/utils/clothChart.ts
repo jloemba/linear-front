@@ -34,12 +34,12 @@ export const getClothChartElements = (
 
 export const getClothChartStyle = (
   variant: ChartVariant,
-): cytoscape.Stylesheet[] => {
+): cytoscape.StylesheetCSS[] => {
   if (variant === "view") {
     return [
       {
         selector: "node",
-        style: {
+        css: {
           "background-color": "data(color)",
           label: "data(label)",
           color: "#FFFFFF",
@@ -57,7 +57,7 @@ export const getClothChartStyle = (
       },
       {
         selector: "node:selected",
-        style: {
+        css: {
           "border-width": 3,
           "border-color": "#FFFFFF",
           "border-opacity": 0.8,
@@ -65,13 +65,13 @@ export const getClothChartStyle = (
       },
       {
         selector: "node:hover",
-        style: {
+        css: {
           opacity: 0.85,
         },
       },
       {
         selector: "edge",
-        style: {
+        css: {
           width: 1.5,
           "line-color": "#D4D4D8",
           "target-arrow-color": "#D4D4D8",
@@ -82,7 +82,7 @@ export const getClothChartStyle = (
       },
       {
         selector: "edge:selected",
-        style: {
+        css: {
           "line-color": "#71717A",
           "target-arrow-color": "#71717A",
           label: "data(label)",
@@ -101,7 +101,7 @@ export const getClothChartStyle = (
   return [
     {
       selector: "node",
-      style: {
+      css: {
         "background-color": "data(color)",
         label: "data(label)",
         color: "#fafaf9",
@@ -120,7 +120,7 @@ export const getClothChartStyle = (
     },
     {
       selector: "node:selected",
-      style: {
+      css: {
         "border-width": 4,
         "border-color": "#f59e0b",
         "overlay-opacity": 0,
@@ -128,7 +128,7 @@ export const getClothChartStyle = (
     },
     {
       selector: "edge",
-      style: {
+      css: {
         width: 1.6,
         "line-color": "#d6d3d1",
         "target-arrow-color": "#d6d3d1",

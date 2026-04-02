@@ -1,8 +1,8 @@
-import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
+import { defineConfig as defineConfigVitest } from "vitest/config";
 
-export default defineConfig({
+export default defineConfigVitest({
   plugins: [react(), tailwindcss()],
   test: {
     environment: "jsdom",

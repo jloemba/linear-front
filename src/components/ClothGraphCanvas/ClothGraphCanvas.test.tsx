@@ -31,13 +31,13 @@ const getClothChartLayoutMock = vi.fn(() => ({ name: "breadthfirst" }));
 const getClothChartStyleMock = vi.fn(() => []);
 
 vi.mock("cytoscape", () => ({
-  default: (...args: unknown[]) => cytoscapeMock(...args),
+  default: cytoscapeMock,
 }));
 
 vi.mock("../../utils/clothChart", () => ({
-  getClothChartElements: (...args: unknown[]) => getClothChartElementsMock(...args),
-  getClothChartLayout: (...args: unknown[]) => getClothChartLayoutMock(...args),
-  getClothChartStyle: (...args: unknown[]) => getClothChartStyleMock(...args),
+  getClothChartElements: (...args: unknown[]) => getClothChartElementsMock(...(args as [])),
+  getClothChartLayout: (...args: unknown[]) => getClothChartLayoutMock(...(args as [])),
+  getClothChartStyle: (...args: unknown[]) => getClothChartStyleMock(...(args as [])),
 }));
 
 describe("ClothGraphCanvas", () => {
