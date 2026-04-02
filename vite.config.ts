@@ -9,6 +9,8 @@ export default defineConfigVitest({
     globals: true,
     setupFiles: "./src/test/setup.ts",
     css: true,
+    include: ["src/**/*.{test,spec}.{js,ts,tsx}"],
+    exclude: ["**/node_modules/**", "e2e/**"],
     coverage: {
       provider: "v8",
       thresholds: {
