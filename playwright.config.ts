@@ -26,8 +26,8 @@ export default defineConfig({
   ],
 
   webServer: {
-    command: "npm run preview -- --port 4173",
-    url: "http://localhost:4173",
+    command: "npm run preview", // Ou 'npx serve dist'
+    port: 4173, // Ton port de preview
     reuseExistingServer: !process.env.CI,
   },
 });
