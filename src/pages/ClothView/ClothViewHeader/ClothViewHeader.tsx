@@ -17,6 +17,11 @@ interface Props {
   descriptionOpen: boolean;
   onToggleDescription: () => void;
   onDelete: () => void;
+  isAuthenticated: boolean;
+  view: {
+    deleteButtonText: string | undefined;
+    editButtonText: string | undefined;
+  };
 }
 
 const ClothViewHeader = ({
@@ -35,6 +40,8 @@ const ClothViewHeader = ({
   descriptionOpen,
   onToggleDescription,
   onDelete,
+  isAuthenticated,
+  view,
 }: Props) => (
   <div className="inline-flex shrink-0 flex-col border-b border-gray-100 bg-white px-10 py-6 dark:border-zinc-800 dark:bg-zinc-950">
     <h1 className="text-3xl font-bold leading-tight text-zinc-900 dark:text-zinc-100">
@@ -47,20 +54,45 @@ const ClothViewHeader = ({
     </div>
 
     <div className="mt-4 flex flex-wrap gap-3">
-      <Link
-        to={`/cloth/${clothId}/edit`}
-        className="inline-flex items-center rounded-full border border-zinc-300 bg-white px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:border-zinc-400 hover:text-zinc-950 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:border-zinc-600 dark:hover:text-zinc-100"
-      >
-        {editClothLabel}
-      </Link>
+      {isAuthenticated ? (
+        <>
+          <Link
+            to={`/cloth/${clothId}/edit`}
+            className="inline-flex items-center rounded-full border border-zinc-300 bg-white px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:border-zinc-400 hover:text-zinc-950 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:border-zinc-600 dark:hover:text-zinc-100"
+          >
+            {view.editButtonText}
+          </Link>
 
-      <button
-        type="button"
-        onClick={onDelete}
-        className="inline-flex items-center rounded-full border border-red-300 bg-red px-4 py-2 text-sm font-medium text-red-700 transition-colors hover:border-red-400 hover:text-red-950 dark:border-red-700 dark:bg-red-900 dark:text-red-200 dark:hover:border-red-600 dark:hover:text-red-100"
-      >
-        {deleteClothLabel}
-      </button>
+          <button
+            type="button"
+            onClick={onDelete}
+            className="inline-flex items-center rounded-full border border-red-300 bg-red px-4 py-2 text-sm font-medium text-red-700 transition-colors hover:border-red-400 hover:text-red-950 dark:border-red-700 dark:bg-red-900 dark:text-red-200 dark:hover:border-red-600 dark:hover:text-red-100"
+          >
+            {view.deleteButtonText}
+          </button>
+        </>
+      ) : (
+        <div className="flex gap-3 text-sm text-zinc-500">
+          <span
+            className={`${
+              isAuthenticated
+                ? "inline-flex items-center rounded-full border border-zinc-300 bg-white px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:border-zinc-400 hover:text-zinc-950 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:border-zinc-600 dark:hover:text-zinc-100"
+                : "hidden"
+            }`}
+          >
+            {view.editButtonText}
+          </span>
+          <span
+            className={` ${
+              isAuthenticated
+                ? "inline-flex items-center rounded-full border border-red-200 bg-red-50 px-4 py-2 font-medium cursor-not-allowed dark:border-red-700 dark:bg-red-900"
+                : "hidden"
+            }`}
+          >
+            {view.deleteButtonText}
+          </span>
+        </div>
+      )}
     </div>
 
     <div className="shrink-0 border-b border-gray-100 bg-white dark:border-zinc-800 dark:bg-zinc-950">

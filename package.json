@@ -12,9 +12,13 @@
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
     "test:e2e:headed": "playwright test --headed",
+    "test:e2e:login": "playwright test login.spec.ts",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@auth0/auth0-react": "^2.16.1",
+    "@react-oauth/google": "^0.13.4",
+    "@testing-library/dom": "^10.4.1",
     "cytoscape": "^3.33.1",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",

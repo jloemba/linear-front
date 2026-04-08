@@ -12,6 +12,10 @@ const clothMessages = {
       switchToDarkMode: "Passer en mode sombre",
       switchToLightMode: "Passer en mode clair",
     },
+    home: {
+      feedHeading: "Votre feed de toiles",
+      noCloths: "Aucune toile n'a été créée pour l'instant. Crée la première !",
+    },
     editor: {
       loadError: "Impossible de charger cette toile.",
       notFound: "Cette toile est introuvable.",
@@ -94,6 +98,8 @@ const clothMessages = {
       deleteError: "La suppression a echoue. Verifie la route DELETE cote API.",
       deleteConfirm:
         "Voulez-vous vraiment supprimer cette toile ? Cette action est irreversible.",
+      editButtonText: "Modifier",
+      deleteButtonText: "Supprimer",
     },
     validation: {
       clothNameRequired: "Le nom de la toile est requis.",
@@ -124,6 +130,10 @@ const clothMessages = {
       confirmDeletion: "Confirm deletion",
       switchToDarkMode: "Switch to dark mode",
       switchToLightMode: "Switch to light mode",
+    },
+    home: {
+      feedHeading: "Your cloth feed",
+      noCloths: "No cloths have been created yet. Create the first one!",
     },
     editor: {
       loadError: "Unable to load this cloth.",
@@ -160,8 +170,7 @@ const clothMessages = {
       relationships: "Relationships",
       linksBetweenNodes: "Links between nodes",
       addRelationship: "Add relationship",
-      noRelationships:
-        "No relationships yet. Add a link to connect two nodes.",
+      noRelationships: "No relationships yet. Add a link to connect two nodes.",
       relationship: "Relationship",
       newRelationship: "New relationship",
       deleteRelationship: "Delete relationship",
@@ -206,6 +215,8 @@ const clothMessages = {
       deleteError: "Delete failed. Please verify the DELETE API route.",
       deleteConfirm:
         "Do you really want to delete this cloth? This action cannot be undone.",
+      editButtonText: "Edit",
+      deleteButtonText: "Delete",
     },
     validation: {
       clothNameRequired: "Cloth name is required.",

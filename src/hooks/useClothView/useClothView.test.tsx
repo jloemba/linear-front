@@ -116,7 +116,8 @@ describe("useClothView", () => {
     expect(deleteClothByIdMock).toHaveBeenCalledWith("cloth-1");
     expect(showSnackbarMock).toHaveBeenCalledWith({
       message: "Deleted",
-      type: "success",
+      type: "SUCCESS",
+
     });
     expect(navigateMock).toHaveBeenCalledWith("/", { replace: true });
   });
@@ -185,7 +186,8 @@ describe("useClothView", () => {
 
     expect(showSnackbarMock).toHaveBeenCalledWith({
       message: "Delete failed",
-      type: "error",
+      type: "ERROR",
+
     });
     expect(navigateMock).not.toHaveBeenCalled();
     expect(result.current.isDeleteDialogOpen).toBe(true);

@@ -2,7 +2,9 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { ThemeProvider } from "../../context/Theme/ThemeProvider";
 import { LanguageProvider } from "../../context/Language/LanguageProvider";
+import { SnackbarProvider } from "../../context/Snackbar/SnackbarProvider";
 import NavigationLayout from "./NavigationLayout";
+
 
 const navigateMock = vi.fn();
 
@@ -28,11 +30,14 @@ describe("NavigationLayout", () => {
       <MemoryRouter>
         <ThemeProvider>
           <LanguageProvider>
-            <NavigationLayout />
+            <SnackbarProvider>
+              <NavigationLayout />
+            </SnackbarProvider>
           </LanguageProvider>
         </ThemeProvider>
       </MemoryRouter>,
     );
+
 
     fireEvent.click(screen.getAllByRole("button")[0]);
     fireEvent.click(screen.getByRole("button", { name: /accueil/i }));

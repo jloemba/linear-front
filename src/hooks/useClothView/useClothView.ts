@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { deleteClothById, fetchClothById } from "../../api/cloth/clothApi";
 import type { IClothDetail, IClothNode } from "../../types/cloth";
+import useAuth from "../useAuth/useAuth";
 import useSnackbar from "../useSnackbar/useSnackbar";
 
 interface Props {
@@ -17,6 +18,7 @@ const useClothView = ({
 }: Props) => {
   const navigate = useNavigate();
   const { showSnackbar } = useSnackbar();
+  const { isAuthenticated } = useAuth();
   const [cloth, setCloth] = useState<IClothDetail | null>(null);
   const [selectedNode, setSelectedNode] = useState<IClothNode | null>(null);
   const [showLegend, setShowLegend] = useState(true);
@@ -49,12 +51,20 @@ const useClothView = ({
   const handleDelete = async () => {
     if (!id) return;
 
+    if (!isAuthenticated) {
+      showSnackbar({
+        message: 'Connectez-vous pour supprimer cette toile',
+        type: "WARNING",
+      });
+      return;
+    }
+
     try {
       await deleteClothById(id);
       setIsDeleteDialogOpen(false);
       showSnackbar({
         message: deleteSuccessMessage,
-        type: "success",
+        type: "SUCCESS",
       });
       navigate("/", {
         replace: true,
@@ -62,7 +72,7 @@ const useClothView = ({
     } catch {
       showSnackbar({
         message: deleteErrorMessage,
-        type: "error",
+        type: "ERROR",
       });
     }
   };

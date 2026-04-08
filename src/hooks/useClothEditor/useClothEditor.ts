@@ -23,6 +23,7 @@ import {
   validateClothPayload,
 } from "../../utils/clothForm";
 import type { ClothCommonMessages, ClothEditorMessages } from "../../pages/ClothEditor/clothEditorUi";
+import useAuth from "../useAuth/useAuth";
 import useSnackbar from "../useSnackbar/useSnackbar";
 
 interface Props {
@@ -40,6 +41,7 @@ export default function useClothEditor({
 }: Props) {
   const navigate = useNavigate();
   const { showSnackbar } = useSnackbar();
+  const { isAuthenticated } = useAuth();
   const [form, setForm] = useState<IClothUpdatePayload | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -246,6 +248,15 @@ export default function useClothEditor({
   const handleSubmit = async (event?: FormEvent<HTMLFormElement>) => {
     event?.preventDefault();
     if (!form) return;
+
+    if (!isAuthenticated) {
+      showSnackbar({
+        message: lang === 'fr' ? 'Connectez-vous pour sauvegarder' : 'Log in to save',
+        type: "WARNING",
+      });
+      return;
+    }
+
     const sanitizedPayload = sanitizeClothPayload(form);
     const validationErrors = validateClothPayload(sanitizedPayload, lang);
 
@@ -263,21 +274,21 @@ export default function useClothEditor({
         setForm(normalizeClothForForm(updatedCloth));
         showSnackbar({
           message: editor.saveSuccess,
-          type: "success",
+          type: "SUCCESS",
         });
       } else {
         const createdCloth = await createCloth(sanitizedPayload);
         setForm(normalizeClothForForm(createdCloth));
         showSnackbar({
           message: editor.createSuccess,
-          type: "success",
+          type: "SUCCESS",
         });
         navigate(`/cloth/${createdCloth.id}/edit`, { replace: true });
       }
     } catch {
       showSnackbar({
         message: id ? editor.saveError : editor.createError,
-        type: "error",
+        type: "ERROR",
       });
     } finally {
       setSaving(false);
@@ -304,6 +315,14 @@ export default function useClothEditor({
       return;
     }
 
+    if (!isAuthenticated) {
+      showSnackbar({
+        message: lang === 'fr' ? 'Connectez-vous pour supprimer' : 'Log in to delete',
+        type: "WARNING",
+      });
+      return;
+    }
+
     setSaving(true);
     setError(null);
 
@@ -312,7 +331,7 @@ export default function useClothEditor({
       setIsDeleteDialogOpen(false);
       showSnackbar({
         message: editor.deleteSuccess,
-        type: "success",
+        type: "SUCCESS",
       });
       navigate("/", {
         replace: true,
@@ -320,7 +339,7 @@ export default function useClothEditor({
     } catch {
       showSnackbar({
         message: editor.deleteError,
-        type: "error",
+        type: "ERROR",
       });
       setSaving(false);
     }

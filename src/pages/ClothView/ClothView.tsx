@@ -6,12 +6,14 @@ import { getClothMessages } from "../../i18n/cloth";
 import ClothNodeDetailsPanel from "./ClothNodeDetailsPanel/ClothNodeDetailsPanel";
 import ClothViewHeader from "./ClothViewHeader/ClothViewHeader";
 import ClothViewLegend from "./ClothViewLegend/ClothViewLegend";
+import useAuth from "../../hooks/useAuth/useAuth";
 import useClothView from "../../hooks/useClothView/useClothView";
 
 const ClothView = () => {
   const { lang } = useLanguage();
   const { common, view } = getClothMessages(lang);
   const { id } = useParams<{ id: string }>();
+  const { isAuthenticated } = useAuth();
   const {
     cloth,
     selectedNode,
@@ -50,9 +52,9 @@ const ClothView = () => {
           noDescriptionLabel={common.noDescription}
           descriptionOpen={descriptionOpen}
           onToggleDescription={() => setDescriptionOpen((current) => !current)}
-          onDelete={() => {
-            openDeleteDialog();
-          }}
+          onDelete={handleDelete}
+          isAuthenticated={isAuthenticated}
+          view={view}
         />
       )}
 

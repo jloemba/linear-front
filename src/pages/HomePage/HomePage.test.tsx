@@ -62,9 +62,10 @@ describe("HomePage", () => {
     renderHomePage();
 
     await waitFor(() => {
-      expect(screen.getByText(/aucune toile trouvée/i)).toBeInTheDocument();
+      expect(screen.getByText(/Aucune toile n'a été créé/i)).toBeInTheDocument();
     });
   });
+
 
   it("falls back to the empty state when the api request fails", async () => {
     const consoleErrorSpy = vi
@@ -75,8 +76,9 @@ describe("HomePage", () => {
     renderHomePage();
 
     await waitFor(() => {
-      expect(screen.getByText(/aucune toile trouvée/i)).toBeInTheDocument();
+      expect(screen.getByText(/Aucune toile n'a été créé/i)).toBeInTheDocument();
     });
+
 
     expect(consoleErrorSpy).toHaveBeenCalled();
     consoleErrorSpy.mockRestore();

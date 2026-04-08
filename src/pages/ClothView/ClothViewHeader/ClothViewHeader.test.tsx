@@ -24,6 +24,12 @@ describe("ClothViewHeader", () => {
         descriptionOpen={false}
         onToggleDescription={onToggleDescription}
         onDelete={onDelete}
+        isAuthenticated={true}
+        view={{
+          deleteButtonText: "Supprimer",
+          editButtonText: "Modifier",
+        }}
+
       />,
     );
 
@@ -52,6 +58,12 @@ describe("ClothViewHeader", () => {
         descriptionOpen
         onToggleDescription={() => undefined}
         onDelete={() => undefined}
+        isAuthenticated={true}
+        view={{
+          deleteButtonText: "Delete",
+          editButtonText: "Edit",
+        }}
+
       />,
     );
 

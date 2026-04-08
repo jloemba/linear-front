@@ -1,18 +1,33 @@
 ﻿import { useState } from "react";
-import { Outlet } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import useLanguage from "../../hooks/useLanguage/useLanguage";
-
+import useAuth from "../../hooks/useAuth/useAuth";
 import Header from "../Header/Header";
 
 const NavigationLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { lang } = useLanguage();
   const navigate = useNavigate();
+  const { isAuthenticated, logout } = useAuth();
+
+  const authActions = [
+    ...(isAuthenticated ? [{
+      label: lang === 'fr' ? 'Déconnexion' : 'Logout',
+      onClick: logout,
+      variant: 'outlined' as const,
+    }] : [{
+      label: lang === 'fr' ? 'Connexion' : 'Login',
+      onClick: () => navigate('/login'),
+      variant: 'outlined' as const,
+    }]),
+  ];
 
   return (
     <div className="min-h-screen w-full bg-white dark:bg-zinc-950">
-      <Header onToggleSidebar={() => setSidebarOpen((current) => !current)} />
+      <Header 
+        onToggleSidebar={() => setSidebarOpen((current) => !current)}
+        actions={authActions}
+      />
       <div className="flex">
         <aside
           className={`fixed left-0 top-14 z-20 h-[calc(100vh-3.5rem)] shrink-0 overflow-hidden border-r border-gray-100 bg-white transition-all duration-300 dark:border-zinc-800 dark:bg-zinc-950 ${

@@ -25,6 +25,14 @@ coverage
 *.sw?
 
 ./.env
-
+.env.local
+.env.example
 
 note.txt
+
+AUTH_SETUP.md
+TODO.md
+test-results
+playwright-report
+./playwright-report/index.html
+.sixth

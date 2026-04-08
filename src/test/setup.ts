@@ -13,3 +13,9 @@ Object.defineProperty(window, "matchMedia", {
     dispatchEvent: vi.fn(),
   })),
 });
+
+// Mock authenticated user for useAuth
+const mockUser = { id: "1", email: "test@example.com", provider: "LOCAL" };
+localStorage.setItem("user", JSON.stringify(mockUser));
+localStorage.setItem("userId", "1");
+

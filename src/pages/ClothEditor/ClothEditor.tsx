@@ -7,12 +7,17 @@ import ClothNodesSection from "./ClothNodesSection/ClothNodesSection";
 import ClothPreviewPanel from "./ClothPreviewPanel/ClothPreviewPanel";
 import ClothQuickNavigation from "./ClothQuickNavigation/ClothQuickNavigation";
 import ClothRelationshipsSection from "./ClothRelationshipsSection/ClothRelationshipsSection";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import useAuth from "../../hooks/useAuth/useAuth";
 import useClothEditor from "../../hooks/useClothEditor/useClothEditor";
 
 const ClothEditor = () => {
   const { lang } = useLanguage();
   const { common, editor } = getClothMessages(lang);
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   const {
     isCreateMode,
     isDeleteDialogOpen,
@@ -49,6 +54,12 @@ const ClothEditor = () => {
     common,
     editor,
   });
+
+  useEffect(() => {
+    // if (!isAuthenticated) {
+    //   navigate('/login');
+    // }
+  }, [isAuthenticated, navigate]);
 
   if (loading) {
     return (
@@ -94,7 +105,7 @@ const ClothEditor = () => {
               {isCreateMode ? editor.backToHome : editor.backToCloth}
             </Link>
 
-            {!isCreateMode && (
+            {!isCreateMode && isAuthenticated && (
               <button
                 type="button"
                 onClick={() => {
@@ -104,6 +115,14 @@ const ClothEditor = () => {
                 className="rounded-full border border-red-200 bg-red-50 px-4 py-2 text-sm font-medium text-red-700 transition hover:border-red-300 hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-60 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-300 dark:hover:bg-red-950/60"
               >
                 {editor.deleteGraph}
+              </button>
+            )}
+            {!isCreateMode && !isAuthenticated && (
+              <button
+                disabled
+                className="rounded-full border border-zinc-200 bg-zinc-50 px-4 py-2 text-sm font-medium text-zinc-500 cursor-not-allowed dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-400"
+              >
+                {lang === 'fr' ? 'Connectez-vous pour supprimer' : 'Log in to delete'}
               </button>
             )}
           </div>

@@ -6,9 +6,13 @@ import type { IClothSummary } from "../../types/cloth";
 import { CATEGORY_COLORS } from "../../utils/const";
 import useClothCategory from "../../hooks/useClothCategory/useClothCategory";
 import { formatDate, truncateText } from "../../utils/func";
+import ProtectedCreateButton from './protectedCreateButton';
+import { getClothMessages } from "../../i18n/cloth";
 
 const Home = () => {
   const { lang } = useLanguage();
+    const { home } = getClothMessages(lang);
+  
   const [cloths, setCloths] = useState<IClothSummary[]>([]);
   const [activeCategory] = useState("Tout");
   const [loading, setLoading] = useState(true);
@@ -59,10 +63,7 @@ const Home = () => {
     content = (
       <div className="flex flex-col items-center justify-center py-32 text-center">
         <p className="font-medium text-zinc-500 dark:text-zinc-300">
-          {lang === "fr" ? "Aucune toile trouvée." : "No canvas found."}
-        </p>
-        <p className="mt-1 text-sm text-zinc-400 dark:text-zinc-500">
-          {lang === "fr" ? "Essaie un autre mot clé." : "Try another keyword."}
+          {home.noCloths}
         </p>
       </div>
     );
@@ -111,15 +112,10 @@ const Home = () => {
         <main className="min-w-0 w-full max-w-[720px]">
           <div className="mb-8 flex items-center justify-between gap-6 border-b border-gray-100 dark:border-zinc-800">
             <button className="border-b-2 border-zinc-300 pb-3 text-sm font-medium text-zinc-700 transition-colors dark:border-zinc-600 dark:text-zinc-100">
-              🌐 Ton fil
+              🌐 {home.feedHeading}
             </button>
 
-            <Link
-              to="/cloth/new"
-              className="mb-3 rounded-full bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-500 dark:bg-emerald-500 dark:hover:bg-emerald-400"
-            >
-              {lang === "fr" ? "Créer une toile" : "Create cloth"}
-            </Link>
+            <ProtectedCreateButton />
           </div>
 
           {content}
