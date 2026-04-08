@@ -13,7 +13,7 @@ const ProtectedCreateButton = () => {
     if (!isAuthenticated) {
       showSnackbar({
         message: lang === 'fr' ? 'Connectez-vous pour créer une toile' : 'Log in to create a canvas',
-        type: 'INFO',
+        type: 'info',
       });
       return;
     }

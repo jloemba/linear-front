@@ -252,7 +252,7 @@ export default function useClothEditor({
     if (!isAuthenticated) {
       showSnackbar({
         message: lang === 'fr' ? 'Connectez-vous pour sauvegarder' : 'Log in to save',
-        type: "WARNING",
+        type: "warning",
       });
       return;
     }
@@ -274,21 +274,21 @@ export default function useClothEditor({
         setForm(normalizeClothForForm(updatedCloth));
         showSnackbar({
           message: editor.saveSuccess,
-          type: "SUCCESS",
+          type: "success",
         });
       } else {
         const createdCloth = await createCloth(sanitizedPayload);
         setForm(normalizeClothForForm(createdCloth));
         showSnackbar({
           message: editor.createSuccess,
-          type: "SUCCESS",
+          type: "success",
         });
         navigate(`/cloth/${createdCloth.id}/edit`, { replace: true });
       }
     } catch {
       showSnackbar({
         message: id ? editor.saveError : editor.createError,
-        type: "ERROR",
+        type: "error",
       });
     } finally {
       setSaving(false);
@@ -318,7 +318,7 @@ export default function useClothEditor({
     if (!isAuthenticated) {
       showSnackbar({
         message: lang === 'fr' ? 'Connectez-vous pour supprimer' : 'Log in to delete',
-        type: "WARNING",
+        type: "warning",
       });
       return;
     }
@@ -331,7 +331,7 @@ export default function useClothEditor({
       setIsDeleteDialogOpen(false);
       showSnackbar({
         message: editor.deleteSuccess,
-        type: "SUCCESS",
+        type: "success",
       });
       navigate("/", {
         replace: true,
@@ -339,7 +339,7 @@ export default function useClothEditor({
     } catch {
       showSnackbar({
         message: editor.deleteError,
-        type: "ERROR",
+        type: "error",
       });
       setSaving(false);
     }

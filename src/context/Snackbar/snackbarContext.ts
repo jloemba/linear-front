@@ -1,6 +1,6 @@
 import { createContext } from "react";
 
-export type SnackbarStateType = "SUCCESS" | "ERROR" | "INFO" | "WARNING";
+export type SnackbarStateType = "success" | "error" | "info" | "warning";
 
 export interface SnackbarState {
   message: string;

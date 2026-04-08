@@ -72,10 +72,10 @@ const useAuth = () => {
 
       showSnackbar({
         message: isRegister ? "Inscription réussie" : "Connexion réussie",
-        type: "SUCCESS",
+        type: "success",
       });
       navigate("/");
-      showSnackbar({ message: "Connexion réussie", type: "SUCCESS" });
+      showSnackbar({ message: "Connexion réussie", type: "success" });
 
       return true;
     } catch (error) {
@@ -83,7 +83,7 @@ const useAuth = () => {
       showSnackbar({
         message:
           error instanceof Error ? error.message : "Erreur d'authentification",
-        type: "ERROR",
+        type: "error",
       });
       return false;
     } finally {
@@ -122,9 +122,9 @@ const useAuth = () => {
       localStorage.setItem("userId", data.userId.toString());
       localStorage.setItem("user", JSON.stringify(userData));
 
-      showSnackbar({ message: "Connexion réussie", type: "SUCCESS" });
+      showSnackbar({ message: "Connexion réussie", type: "success" });
       navigate("/");
-      showSnackbar({ message: "Connexion réussie", type: "SUCCESS" });
+      showSnackbar({ message: "Connexion réussie", type: "success" });
 
       return true;
     } catch (error) {
@@ -134,7 +134,7 @@ const useAuth = () => {
           error instanceof Error
             ? error.message
             : "Erreur d'authentification sociale",
-        type: "ERROR",
+        type: "error",
       });
       return false;
     } finally {

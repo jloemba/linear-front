@@ -11,8 +11,9 @@ const TestConsumer = () => {
       onClick={() =>
         showSnackbar({
           message: "Created",
-          type: "success",
+          type: "success" as const,
         })
+
       }
     >
       notify

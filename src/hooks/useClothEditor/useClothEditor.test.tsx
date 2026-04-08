@@ -79,7 +79,7 @@ describe("useClothEditor", () => {
     expect(createClothMock).toHaveBeenCalled();
     expect(showSnackbarMock).toHaveBeenCalledWith({
       message: editor.createSuccess,
-      type: "SUCCESS",
+      type: "success",
 
     });
     expect(navigateMock).toHaveBeenCalledWith("/cloth/cloth-1/edit", {
@@ -136,7 +136,7 @@ describe("useClothEditor", () => {
     );
     expect(showSnackbarMock).toHaveBeenCalledWith({
       message: editor.saveSuccess,
-      type: "SUCCESS",
+      type: "success",
 
     });
   });
@@ -217,7 +217,7 @@ describe("useClothEditor", () => {
 
     expect(showSnackbarMock).toHaveBeenCalledWith({
       message: editor.saveError,
-      type: "ERROR",
+      type: "error",
 
     });
   });
@@ -316,7 +316,7 @@ describe("useClothEditor", () => {
 
     expect(showSnackbarMock).toHaveBeenCalledWith({
       message: editor.deleteError,
-      type: "ERROR",
+      type: "error",
 
     });
     expect(result.current.saving).toBe(false);

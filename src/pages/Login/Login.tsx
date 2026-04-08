@@ -10,12 +10,6 @@ const Login = () => {
   const { showSnackbar } = useSnackbar();
   const { isAuthenticated, isLoading, loginWithSocial } =
     useAuth();
-
-  // const [email, setEmail] = useState("");
-  // const [password, setPassword] = useState("");
-  // const [isLoginMode, setIsLoginMode] = useState(true);
-  // const [isSubmitting] = useState(false);
-
   // Redirect if already authenticated
   if (isAuthenticated) {
     return null;
@@ -28,7 +22,7 @@ const Login = () => {
           lang === "fr"
             ? "Google n'a pas renvoyé de token"
             : "Google did not return a token",
-        type: "ERROR",
+        type: "error",
       });
       return;
     }
@@ -49,7 +43,7 @@ const Login = () => {
           lang === "fr"
             ? "Échec de l'authentification Google"
             : "Google authentication failed",
-        type: "ERROR",
+        type: "error",
       });
     }
   };
@@ -89,7 +83,7 @@ const Login = () => {
             onError={() => {
               showSnackbar({
                 message:login.googleLoginError,
-                type: "ERROR",
+                type: "error",
               });
             }}
             text={"signin_with"}

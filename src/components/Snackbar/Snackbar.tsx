@@ -1,6 +1,7 @@
+
 interface Props {
   message: string;
-  type: "success" | "error";
+  type: "success" | "error" | "info" | "warning";
   onClose: () => void;
 }
 
@@ -9,6 +10,10 @@ const styles = {
     "border-emerald-200 bg-emerald-50 text-emerald-800 shadow-emerald-100/80 dark:border-emerald-900/60 dark:bg-emerald-950/80 dark:text-emerald-200",
   error:
     "border-red-200 bg-red-50 text-red-800 shadow-red-100/80 dark:border-red-900/60 dark:bg-red-950/80 dark:text-red-200",
+  info:
+    "border-blue-200 bg-blue-50 text-blue-800 shadow-blue-100/80 dark:border-blue-900/60 dark:bg-blue-950/80 dark:text-blue-200",
+  warning:
+    "border-yellow-200 bg-yellow-50 text-yellow-800 shadow-yellow-100/80 dark:border-yellow-900/60 dark:bg-yellow-950/80 dark:text-yellow-200",
 } as const;
 
 const icons = {
@@ -28,6 +33,36 @@ const icons = {
     </svg>
   ),
   error: (
+    <svg
+      className="h-5 w-5"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M6 18L18 6M6 6l12 12"
+      />
+    </svg>
+  ),
+  info: (
+    <svg
+      className="h-5 w-5"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M6 18L18 6M6 6l12 12"
+      />
+    </svg>
+  ),
+  warning: (
     <svg
       className="h-5 w-5"
       fill="none"

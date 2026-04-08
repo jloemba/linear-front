@@ -54,7 +54,7 @@ const useClothView = ({
     if (!isAuthenticated) {
       showSnackbar({
         message: 'Connectez-vous pour supprimer cette toile',
-        type: "WARNING",
+        type: "warning",
       });
       return;
     }
@@ -64,7 +64,7 @@ const useClothView = ({
       setIsDeleteDialogOpen(false);
       showSnackbar({
         message: deleteSuccessMessage,
-        type: "SUCCESS",
+        type: "success",
       });
       navigate("/", {
         replace: true,
@@ -72,7 +72,7 @@ const useClothView = ({
     } catch {
       showSnackbar({
         message: deleteErrorMessage,
-        type: "ERROR",
+        type: "error",
       });
     }
   };
