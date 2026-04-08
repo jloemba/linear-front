@@ -1,25 +1,23 @@
-﻿import { useState } from "react";
-import { GoogleLogin } from "@react-oauth/google";
-import { useNavigate } from "react-router-dom";
+﻿import { GoogleLogin } from "@react-oauth/google";
 import useLanguage from "../../hooks/useLanguage/useLanguage";
 import useSnackbar from "../../hooks/useSnackbar/useSnackbar";
 import useAuth from "../../hooks/useAuth/useAuth";
+import { getClothMessages } from "../../i18n/cloth";
 
 const Login = () => {
   const { lang } = useLanguage();
+  const { login } = getClothMessages(lang);
   const { showSnackbar } = useSnackbar();
-  const navigate = useNavigate();
-  const { isAuthenticated, isLoading, loginWithSocial, loginWithEmailPassword } =
+  const { isAuthenticated, isLoading, loginWithSocial } =
     useAuth();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isLoginMode, setIsLoginMode] = useState(true);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  // const [email, setEmail] = useState("");
+  // const [password, setPassword] = useState("");
+  // const [isLoginMode, setIsLoginMode] = useState(true);
+  // const [isSubmitting] = useState(false);
 
   // Redirect if already authenticated
   if (isAuthenticated) {
-    //navigate("/");
     return null;
   }
 
@@ -56,48 +54,6 @@ const Login = () => {
     }
   };
 
-  const handleAppleLogin = () => {
-    if (!import.meta.env.VITE_API_URL) {
-      showSnackbar({
-        message:
-          lang === "fr"
-            ? "URL API manquante pour Apple login"
-            : "API URL missing for Apple login",
-        type: "ERROR",
-      });
-      return;
-    }
-
-    window.location.href = `${import.meta.env.VITE_API_URL}/auth/oauth/apple`;
-  };
-
-  const handleTwitterLogin = () => {
-    if (!import.meta.env.VITE_API_URL) {
-      showSnackbar({
-        message:
-          lang === "fr"
-            ? "URL API manquante pour Twitter login"
-            : "API URL missing for Twitter login",
-        type: "ERROR",
-      });
-      return;
-    }
-
-    window.location.href = `${import.meta.env.VITE_API_URL}/auth/oauth/twitter`;
-  };
-
-  const handleEmailPasswordSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    const success = await loginWithEmailPassword(email, password, !isLoginMode);
-
-    if (!success) {
-      // Error message is already shown by the hook
-    }
-
-    setIsSubmitting(false);
-  };
 
   if (isLoading) {
     return (
@@ -132,20 +88,13 @@ const Login = () => {
             onSuccess={handleGoogleSuccess}
             onError={() => {
               showSnackbar({
-                message:
-                  lang === "fr"
-                    ? "Impossible de se connecter avec Google"
-                    : "Google login failed",
+                message:login.googleLoginError,
                 type: "ERROR",
               });
             }}
-            text={
-              lang === "fr"
-                ? "Se connecter avec Google"
-                : "Sign in with Google"
-            }
+            text={"signin_with"}
           />
-
+{/* 
           <button
             type="button"
             onClick={handleAppleLogin}
@@ -160,7 +109,7 @@ const Login = () => {
             className="w-full flex justify-center items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
           >
             {lang === "fr" ? "Continuer avec Twitter" : "Continue with Twitter"}
-          </button>
+          </button> */}
         </div>
 
         {/* Divider */}
@@ -176,7 +125,7 @@ const Login = () => {
         </div>
 
         {/* Email/Password Form */}
-        <form className="space-y-6" onSubmit={handleEmailPasswordSubmit}>
+        {/* <form className="space-y-6" onSubmit={handleEmailPasswordSubmit}>
           <div>
             <label htmlFor="email" className="sr-only">
               {lang === "fr" ? "Adresse email" : "Email address"}
@@ -248,7 +197,7 @@ const Login = () => {
                   : "Already have an account? Sign in"}
             </button>
           </div>
-        </form>
+        </form> */}
       </div>
     </div>
   );

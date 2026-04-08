@@ -3,7 +3,7 @@ import { useNavigate, Outlet } from 'react-router-dom';
 import useAuth from '../hooks/useAuth/useAuth';
 
 const ProtectedRoute = () => {
-  const { isAuthenticated,user } = useAuth();
+  const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {

@@ -24,7 +24,6 @@ const ClothView = () => {
     setShowLegend,
     setDescriptionOpen,
     handleSelectNode,
-    openDeleteDialog,
     closeDeleteDialog,
     handleDelete,
   } = useClothView({

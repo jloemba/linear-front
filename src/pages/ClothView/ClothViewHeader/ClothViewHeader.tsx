@@ -32,8 +32,6 @@ const ClothViewHeader = ({
   lang,
   publishedOnLabel,
   authorLabel,
-  editClothLabel,
-  deleteClothLabel,
   hideDescriptionLabel,
   aboutThisClothLabel,
   noDescriptionLabel,

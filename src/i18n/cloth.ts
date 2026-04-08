@@ -12,6 +12,10 @@ const clothMessages = {
       switchToDarkMode: "Passer en mode sombre",
       switchToLightMode: "Passer en mode clair",
     },
+    login:{
+      googleLoginError: "L'authentification Google a échoué",
+      btnGoogle: "Se connecter avec Google",
+    },
     home: {
       feedHeading: "Votre feed de toiles",
       noCloths: "Aucune toile n'a été créée pour l'instant. Crée la première !",
@@ -130,6 +134,10 @@ const clothMessages = {
       confirmDeletion: "Confirm deletion",
       switchToDarkMode: "Switch to dark mode",
       switchToLightMode: "Switch to light mode",
+    },
+    login:{
+      googleLoginError: "Google authentication failed",
+      btnGoogle: "Log in with Google",
     },
     home: {
       feedHeading: "Your cloth feed",

@@ -2,13 +2,10 @@ import { Link } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth/useAuth';
 import useLanguage from '../../hooks/useLanguage/useLanguage';
 import useSnackbar from '../../hooks/useSnackbar/useSnackbar';
-import { getClothMessages } from '../../i18n/cloth';
 
-interface ProtectedCreateButtonProps {}
 
-const ProtectedCreateButton = ({}: ProtectedCreateButtonProps) => {
+const ProtectedCreateButton = () => {
   const { lang } = useLanguage();
-  const { common } = getClothMessages(lang);
   const { isAuthenticated } = useAuth();
   const { showSnackbar } = useSnackbar();
 
