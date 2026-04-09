@@ -1,3 +1,4 @@
+
 export type AppLang = "fr" | "en";
 
 const clothMessages = {
@@ -12,7 +13,7 @@ const clothMessages = {
       switchToDarkMode: "Passer en mode sombre",
       switchToLightMode: "Passer en mode clair",
     },
-    login:{
+    login: {
       googleLoginError: "L'authentification Google a échoué",
       btnGoogle: "Se connecter avec Google",
     },
@@ -105,6 +106,12 @@ const clothMessages = {
       editButtonText: "Modifier",
       deleteButtonText: "Supprimer",
     },
+    notFound: {
+      errorTitle: "404",
+      subErrortitle: "Page introuvable",
+      message: "La page que vous cherchez n'existe pas.",
+      home: "Retour à l'accueil",
+    },
     validation: {
       clothNameRequired: "Le nom de la toile est requis.",
       clothTypeRequired: "Le type de la toile est requis.",
@@ -135,7 +142,7 @@ const clothMessages = {
       switchToDarkMode: "Switch to dark mode",
       switchToLightMode: "Switch to light mode",
     },
-    login:{
+    login: {
       googleLoginError: "Google authentication failed",
       btnGoogle: "Log in with Google",
     },
@@ -206,6 +213,12 @@ const clothMessages = {
       saveChanges: "Save changes",
       expandedFullscreenPreview: "Expanded fullscreen preview",
       close: "Close",
+    },
+    notFound: {
+      errorTitle: "404",
+      subErrortitle: "Page Not Found",
+      message: "The page you are looking for does not exist.",
+      home: "Back to home",
     },
     view: {
       publishedOn: "Posted on",

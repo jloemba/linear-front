@@ -3,6 +3,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import { LanguageProvider } from "./context/Language/LanguageProvider";
 import { SnackbarProvider } from "./context/Snackbar/SnackbarProvider";
 import { ThemeProvider } from "./context/Theme/ThemeProvider";
+import NotFound from "./pages/NotFound/NotFound";
 import Home from "./pages/HomePage/HomePage";
 import ClothView from "./pages/ClothView/ClothView";
 import NavigationLayout from "./layout/NavigationLayout/NavigationLayout";
@@ -29,7 +30,9 @@ function App() {
                     <Route path="/cloth/:id/edit" element={<ClothEditor />} />
                   </Route>
                 </Route>
+                <Route path="*" element={<NotFound />} />
               </Routes>
+
             </SnackbarProvider>
           </LanguageProvider>
         </ThemeProvider>

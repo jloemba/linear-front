@@ -8,9 +8,10 @@ const ProtectedRoute = () => {
 
   useEffect(() => {
     if (!localStorage.getItem("user")) {
-      navigate('/', { replace: true });
+      navigate('/404?unauth=true', { replace: true });
     }
   }, [isAuthenticated, navigate]);
+
 
   return isAuthenticated ? <Outlet /> : null;
 };
