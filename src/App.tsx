@@ -6,6 +6,7 @@ import { ThemeProvider } from "./context/Theme/ThemeProvider";
 import NotFound from "./pages/NotFound/NotFound";
 import Home from "./pages/HomePage/HomePage";
 import ClothView from "./pages/ClothView/ClothView";
+import ClothInsights from "./pages/ClothInsights/ClothInsights";
 import NavigationLayout from "./layout/NavigationLayout/NavigationLayout";
 import ClothEditor from "./pages/ClothEditor/ClothEditor";
 import Login from "./pages/Login/Login";
@@ -28,6 +29,7 @@ function App() {
                   <Route element={<ProtectedRoute />}>
                     <Route path="/cloth/new" element={<ClothEditor />} />
                     <Route path="/cloth/:id/edit" element={<ClothEditor />} />
+                    <Route path="/cloth/:id/insights" element={<ClothInsights />} />
                   </Route>
                 </Route>
                 <Route path="*" element={<NotFound />} />

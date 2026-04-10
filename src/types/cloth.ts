@@ -47,6 +47,7 @@ export interface IClothUpdatePayload {
   name: string;
   type: string;
   description: string | null;
+  userId?: string;
   nodes: IClothNode[];
   relationships: IClothRelationship[];
 }

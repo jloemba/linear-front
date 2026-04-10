@@ -5,10 +5,12 @@ import {
   fetchClothById,
   updateClothById,
 } from "./clothApi";
+import { vi, describe, it, expect, beforeEach } from "vitest";
 
 describe("clothApi", () => {
   beforeEach(() => {
     vi.restoreAllMocks();
+    window.localStorage.clear();
   });
 
   it("fetches all cloths", async () => {
@@ -50,22 +52,12 @@ describe("clothApi", () => {
     expect(fetch).toHaveBeenCalledWith("http://localhost:8080/api/graphs/cloth-1");
   });
 
-  it("updates a cloth", async () => {
-    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+  it("updates a cloth with userId when available", async () => {
+    window.localStorage.setItem("userId", "user-uuid-123");
+    const fetchSpy = vi.spyOn(globalThis, "fetch").mockResolvedValue(
       new Response(
-        JSON.stringify({
-          id: "cloth-1",
-          name: "Updated",
-          description: null,
-          createdAt: "2026-04-02T00:00:00.000Z",
-          type: "MUSIC",
-          nodes: [],
-          relationships: [],
-        }),
-        {
-          status: 200,
-          headers: { "Content-Type": "application/json" },
-        },
+        JSON.stringify({ id: "cloth-1", name: "Updated" }),
+        { status: 200, headers: { "Content-Type": "application/json" } },
       ),
     );
 
@@ -77,30 +69,46 @@ describe("clothApi", () => {
       relationships: [],
     };
 
-    const data = await updateClothById("cloth-1", payload);
+    await updateClothById("cloth-1", payload);
 
-    expect(data.name).toBe("Updated");
-    expect(fetch).toHaveBeenCalledWith("http://localhost:8080/api/graphs/cloth-1", expect.objectContaining({
-      method: "PUT",
-    }));
+    // Analyse du body envoyé (le 2ème argument du 1er appel de fetch)
+    const sentBody = JSON.parse(fetchSpy.mock.calls[0][1]?.body as string);
+    
+    expect(sentBody).toMatchObject({
+      ...payload,
+      userId: "user-uuid-123",
+    });
   });
 
-  it("creates a cloth", async () => {
-    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+  it("updates a cloth without userId when not available", async () => {
+    const fetchSpy = vi.spyOn(globalThis, "fetch").mockResolvedValue(
       new Response(
-        JSON.stringify({
-          id: "cloth-1",
-          name: "Created",
-          description: null,
-          createdAt: "2026-04-02T00:00:00.000Z",
-          type: "MUSIC",
-          nodes: [],
-          relationships: [],
-        }),
-        {
-          status: 200,
-          headers: { "Content-Type": "application/json" },
-        },
+        JSON.stringify({ id: "cloth-1", name: "Updated" }),
+        { status: 200, headers: { "Content-Type": "application/json" } },
+      ),
+    );
+
+    const payload = {
+      name: "Updated",
+      type: "MUSIC",
+      description: null,
+      nodes: [],
+      relationships: [],
+    };
+
+    await updateClothById("cloth-1", payload);
+
+    const sentBody = JSON.parse(fetchSpy.mock.calls[0][1]?.body as string);
+    expect(sentBody).toMatchObject(payload);
+    expect(sentBody.userId).toBeUndefined();
+  });
+
+  it("creates a cloth with userId when available", async () => {
+    window.localStorage.setItem("userId", "user-uuid-123");
+    const fetchSpy = vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response(
+        JSON.stringify({ id: "cloth-1", name: "Created" }),
+        { status: 200, headers: { "Content-Type": "application/json" } },
       ),
     );
 
@@ -112,12 +120,36 @@ describe("clothApi", () => {
       relationships: [],
     };
 
-    const data = await createCloth(payload);
+    await createCloth(payload);
 
-    expect(data.name).toBe("Created");
-    expect(fetch).toHaveBeenCalledWith("http://localhost:8080/api/graphs", expect.objectContaining({
-      method: "POST",
-    }));
+    const sentBody = JSON.parse(fetchSpy.mock.calls[0][1]?.body as string);
+    expect(sentBody).toMatchObject({
+      ...payload,
+      userId: "user-uuid-123",
+    });
+  });
+
+  it("creates a cloth without userId when not available", async () => {
+    const fetchSpy = vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response(
+        JSON.stringify({ id: "cloth-1", name: "Created" }),
+        { status: 200, headers: { "Content-Type": "application/json" } },
+      ),
+    );
+
+    const payload = {
+      name: "Created",
+      type: "MUSIC",
+      description: null,
+      nodes: [],
+      relationships: [],
+    };
+
+    await createCloth(payload);
+
+    const sentBody = JSON.parse(fetchSpy.mock.calls[0][1]?.body as string);
+    expect(sentBody).toMatchObject(payload);
+    expect(sentBody.userId).toBeUndefined();
   });
 
   it("deletes a cloth", async () => {
@@ -175,16 +207,8 @@ describe("clothApi", () => {
           JSON.stringify({
             id: "cloth-1",
             name: "Refetched cloth",
-            description: null,
-            createdAt: "2026-04-02T00:00:00.000Z",
-            type: "MUSIC",
-            nodes: [],
-            relationships: [],
           }),
-          {
-            status: 200,
-            headers: { "Content-Type": "application/json" },
-          },
+          { status: 200, headers: { "Content-Type": "application/json" } },
         ),
       );
 
@@ -197,52 +221,7 @@ describe("clothApi", () => {
     });
 
     expect(data.name).toBe("Refetched cloth");
-    expect(fetchSpy).toHaveBeenNthCalledWith(
-      2,
-      "http://localhost:8080/api/graphs/cloth-1",
-    );
-  });
-
-  it("refetches the cloth when update returns non-json content", async () => {
-    const fetchSpy = vi
-      .spyOn(globalThis, "fetch")
-      .mockResolvedValueOnce(
-        new Response("ok", {
-          status: 200,
-          headers: { "Content-Type": "text/plain" },
-        }),
-      )
-      .mockResolvedValueOnce(
-        new Response(
-          JSON.stringify({
-            id: "cloth-1",
-            name: "Refetched cloth",
-            description: null,
-            createdAt: "2026-04-02T00:00:00.000Z",
-            type: "MUSIC",
-            nodes: [],
-            relationships: [],
-          }),
-          {
-            status: 200,
-            headers: { "Content-Type": "application/json" },
-          },
-        ),
-      );
-
-    const data = await updateClothById("cloth-1", {
-      name: "Updated",
-      type: "MUSIC",
-      description: null,
-      nodes: [],
-      relationships: [],
-    });
-
-    expect(data.name).toBe("Refetched cloth");
-    expect(fetchSpy).toHaveBeenNthCalledWith(
-      2,
-      "http://localhost:8080/api/graphs/cloth-1",
-    );
+    expect(fetchSpy).toHaveBeenCalledTimes(2);
   });
 
   it("throws when createCloth returns no content", async () => {

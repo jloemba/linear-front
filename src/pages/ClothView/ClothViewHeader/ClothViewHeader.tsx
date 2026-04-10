@@ -13,6 +13,7 @@ interface Props {
   deleteClothLabel: string;
   hideDescriptionLabel: string;
   aboutThisClothLabel: string;
+  insightsLabel: string;
   noDescriptionLabel: string;
   descriptionOpen: boolean;
   onToggleDescription: () => void;
@@ -34,6 +35,7 @@ const ClothViewHeader = ({
   authorLabel,
   hideDescriptionLabel,
   aboutThisClothLabel,
+  insightsLabel,
   noDescriptionLabel,
   descriptionOpen,
   onToggleDescription,
@@ -54,6 +56,13 @@ const ClothViewHeader = ({
     <div className="mt-4 flex flex-wrap gap-3">
       {isAuthenticated ? (
         <>
+          <Link
+            to={`/cloth/${clothId}/insights`}
+            className="inline-flex items-center rounded-full border border-zinc-300 bg-white px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:border-zinc-400 hover:text-zinc-950 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:border-zinc-600 dark:hover:text-zinc-100"
+          >
+            {insightsLabel}
+          </Link>
+
           <Link
             to={`/cloth/${clothId}/edit`}
             className="inline-flex items-center rounded-full border border-zinc-300 bg-white px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:border-zinc-400 hover:text-zinc-950 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:border-zinc-600 dark:hover:text-zinc-100"
@@ -93,7 +102,7 @@ const ClothViewHeader = ({
       )}
     </div>
 
-    <div className="shrink-0 border-b border-gray-100 bg-white dark:border-zinc-800 dark:bg-zinc-950">
+    <div className="shrink-0 bg-white dark:bg-zinc-950">
       <button
         onClick={onToggleDescription}
         className="mt-2 flex items-center gap-1.5 text-xs font-medium text-zinc-400 transition-colors hover:text-zinc-700 dark:text-zinc-500 dark:hover:text-zinc-300"
@@ -118,7 +127,7 @@ const ClothViewHeader = ({
     <div
       className={`overflow-hidden transition-all duration-300 ${descriptionOpen ? "max-h-48 mt-4" : "max-h-0"}`}
     >
-      <div className="border-t border-gray-100 pt-4 dark:border-zinc-800">
+      <div className="pt-4 dark:border-zinc-800">
         <p className="max-w-2xl text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
           {clothDescription || noDescriptionLabel}
         </p>

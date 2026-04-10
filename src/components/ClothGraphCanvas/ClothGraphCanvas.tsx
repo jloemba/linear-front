@@ -10,6 +10,8 @@ import {
 type GraphData = Pick<IClothDetail, "nodes" | "relationships"> | IClothUpdatePayload;
 type GraphVariant = "editor" | "view";
 
+
+// Todo : rendre cette props générique pour la réutiliser dans d'autres component
 interface Props {
   data: GraphData;
   lang: "fr" | "en";
@@ -20,6 +22,7 @@ interface Props {
   fitPadding?: number;
   focusPadding?: number;
   onSelectNode?: (nodeId: string | null) => void;
+  onNodeTap?: (nodeId: string) => void;
 }
 
 const ClothGraphCanvas = ({
@@ -32,10 +35,13 @@ const ClothGraphCanvas = ({
   fitPadding,
   focusPadding,
   onSelectNode,
+  onNodeTap,
 }: Props) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const cyRef = useRef<cytoscape.Core | null>(null);
 
+
+  // Mettre un seul useEffect pour gérer l'initialisation et la mise à jour du graphe, en utilisant les dépendances pour déclencher les changements nécessaires
   useEffect(() => {
     if (!containerRef.current) return;
 
@@ -46,8 +52,12 @@ const ClothGraphCanvas = ({
       layout: getClothChartLayout(variant, isFullscreen),
     });
 
+
+    // Un seul cy.on pour gérer à la fois la sélection et la désélection des noeuds, en vérifiant le target de l'événement
     cy.on("tap", "node", (event) => {
-      onSelectNode?.(event.target.id());
+      const nodeId = event.target.id();
+      onNodeTap?.(nodeId);
+      onSelectNode?.(nodeId);
     });
 
     cy.on("tap", (event) => {
@@ -73,6 +83,7 @@ const ClothGraphCanvas = ({
     isFullscreen,
     lang,
     onSelectNode,
+    onNodeTap,
     selectedNodeId,
     variant,
   ]);
@@ -85,6 +96,7 @@ const ClothGraphCanvas = ({
     cy.resize();
     cy.elements().unselect();
 
+    // Todo : Variabiliser les valeurs en dur
     if (selectedNodeId) {
       const selectedElement = cy.getElementById(selectedNodeId);
       if (selectedElement.length > 0) {
@@ -94,7 +106,7 @@ const ClothGraphCanvas = ({
             eles: selectedElement.closedNeighborhood(),
             padding:
               focusPadding ?? (variant === "view" ? 60 : isFullscreen ? 52 : 28),
-          },
+          }, 
           duration: 250,
         });
       }

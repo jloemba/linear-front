@@ -4,7 +4,9 @@
   IClothSummary,
   IClothUpdatePayload,
 } from "../../types/cloth";
+import { getUserId } from "../../utils/analytics.utils";
 
+// Todo : Faire un fichier de config pour stocker les valeurs sensibles selon les environnements de dev, staging et prod  
 const BASE_URL = "http://localhost:8080/api";
 
 export const fetchAllCloths = async (): Promise<{ graphs: IClothSummary[] }> => {
@@ -23,12 +25,18 @@ export const updateClothById = async (
   id: string,
   payload: IClothUpdatePayload,
 ): Promise<IClothDetail> => {
+  const userId = getUserId();
+  const payloadWithUserId: IClothUpdatePayload = {
+    ...payload,
+    ...(userId && { userId }),
+  };
+
   const res = await fetch(`${BASE_URL}/graphs/${id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(payload),
+    body: JSON.stringify(payloadWithUserId),
   });
 
   if (!res.ok) {
@@ -52,12 +60,18 @@ export const updateClothById = async (
 export const createCloth = async (
   payload: IClothCreatePayload,
 ): Promise<IClothDetail> => {
+  const userId = getUserId();
+  const payloadWithUserId: IClothCreatePayload = {
+    ...payload,
+    ...(userId && { userId }),
+  };
+
   const res = await fetch(`${BASE_URL}/graphs`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(payload),
+    body: JSON.stringify(payloadWithUserId),
   });
 
   if (!res.ok) {
@@ -82,3 +96,4 @@ export const deleteClothById = async (id: string): Promise<void> => {
     throw new Error(responseText || `Failed to delete cloth (${res.status})`);
   }
 };
+

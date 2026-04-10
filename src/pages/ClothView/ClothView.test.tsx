@@ -101,6 +101,7 @@ describe("ClothView page", () => {
       setShowLegend: vi.fn(),
       setDescriptionOpen: vi.fn(),
       handleSelectNode: vi.fn(),
+      handleNodeTap: vi.fn(),
       openDeleteDialog: vi.fn(),
       closeDeleteDialog: vi.fn(),
       handleDelete: vi.fn(),
@@ -116,10 +117,13 @@ describe("ClothView page", () => {
     const setShowLegend = vi.fn();
     const setDescriptionOpen = vi.fn();
     const handleSelectNode = vi.fn();
+    const handleNodeTap = vi.fn();
     const openDeleteDialog = vi.fn();
     const closeDeleteDialog = vi.fn();
     const handleDelete = vi.fn();
 
+    //TODO : Mettre les type de cloth(Music , Business ,etc ...) dans une enum pour éviter les erreurs de string
+    //TODO : Faire des mocks de cloths plus complets pour tester les différentes parties du composant (description, legend, node details panel, etc ...)
     mockUseClothView.mockReturnValue({
       cloth: {
         id: "cloth-1",
@@ -138,6 +142,7 @@ describe("ClothView page", () => {
       setShowLegend,
       setDescriptionOpen,
       handleSelectNode,
+      handleNodeTap,
       openDeleteDialog,
       closeDeleteDialog,
       handleDelete,

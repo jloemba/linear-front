@@ -20,6 +20,7 @@ describe("ClothViewHeader", () => {
         deleteClothLabel="Supprimer"
         hideDescriptionLabel="Masquer la description"
         aboutThisClothLabel="A propos de cette toile"
+        insightsLabel="Insights"
         noDescriptionLabel="Aucune description disponible."
         descriptionOpen={false}
         onToggleDescription={onToggleDescription}
@@ -54,6 +55,7 @@ describe("ClothViewHeader", () => {
         deleteClothLabel="Delete"
         hideDescriptionLabel="Hide description"
         aboutThisClothLabel="About this cloth"
+        insightsLabel="Insights"
         noDescriptionLabel="No description available."
         descriptionOpen
         onToggleDescription={() => undefined}

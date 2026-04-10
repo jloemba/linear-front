@@ -24,6 +24,7 @@ const ClothView = () => {
     setShowLegend,
     setDescriptionOpen,
     handleSelectNode,
+    handleNodeTap,
     closeDeleteDialog,
     handleDelete,
   } = useClothView({
@@ -48,6 +49,7 @@ const ClothView = () => {
           deleteClothLabel={view.deleteCloth}
           hideDescriptionLabel={view.hideDescription}
           aboutThisClothLabel={view.aboutThisCloth}
+          insightsLabel={view.insights}
           noDescriptionLabel={common.noDescription}
           descriptionOpen={descriptionOpen}
           onToggleDescription={() => setDescriptionOpen((current) => !current)}
@@ -88,6 +90,7 @@ const ClothView = () => {
               variant="view"
               selectedNodeId={selectedNode?.id ?? null}
               onSelectNode={handleSelectNode}
+              onNodeTap={handleNodeTap}
               className="w-full h-full"
             />
           )}
