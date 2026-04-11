@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import useLanguage from "../../hooks/useLanguage/useLanguage";
+import useLanguage from "../../hooks/useLanguageHook/useLanguage";
 import { getClothMessages } from "../../i18n/cloth";
 
 const NotFound = () => {

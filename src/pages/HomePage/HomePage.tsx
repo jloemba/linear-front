@@ -1,9 +1,9 @@
 ﻿import { useEffect, useMemo, useState } from "react";
-import useLanguage from "../../hooks/useLanguage/useLanguage";
+import useLanguage from "../../hooks/useLanguageHook/useLanguage";
 import { fetchAllCloths } from "../../api/cloth/clothApi";
 import type { IClothSummary } from "../../types/cloth";
 import { CATEGORY_COLORS } from "../../utils/const";
-import useClothCategory from "../../hooks/useClothCategory/useClothCategory";
+import useClothCategory from "../../hooks/useClothCategoryHook/useClothCategory";
 import { formatDate, truncateText } from "../../utils/func";
 import ProtectedCreateButton from './protectedCreateButton';
 import { getClothMessages } from "../../i18n/cloth";

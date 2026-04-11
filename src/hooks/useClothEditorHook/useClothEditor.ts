@@ -23,8 +23,8 @@ import {
   validateClothPayload,
 } from "../../utils/clothForm";
 import type { ClothCommonMessages, ClothEditorMessages } from "../../pages/ClothEditor/clothEditorUi";
-import useAuth from "../useAuth/useAuth";
-import useSnackbar from "../useSnackbar/useSnackbar";
+import useAuth from "../useAuthHook/useAuth";
+import useSnackbar from "../useSnackbarHook/useSnackbar";
 
 interface Props {
   id?: string;

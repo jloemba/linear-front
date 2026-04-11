@@ -1,7 +1,7 @@
 ﻿import { useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import useLanguage from "../../hooks/useLanguage/useLanguage";
-import useAuth from "../../hooks/useAuth/useAuth";
+import useLanguage from "../../hooks/useLanguageHook/useLanguage";
+import useAuth from "../../hooks/useAuthHook/useAuth";
 import Header from "../Header/Header";
 
 const NavigationLayout = () => {

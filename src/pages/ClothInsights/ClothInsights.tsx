@@ -1,88 +1,20 @@
-import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { fetchCanvasInsights } from "../../api/analytics/analyticsApi";
-import useLanguage from "../../hooks/useLanguage/useLanguage";
+import useLanguage from "../../hooks/useLanguageHook/useLanguage";
 import { getClothMessages } from "../../i18n/cloth";
-import type { IInsightResult } from "../../types/analytics";
-
-const formatCount = (value: number, lang: "fr" | "en") =>
-  new Intl.NumberFormat(lang === "fr" ? "fr-FR" : "en-US").format(value);
-
-const formatInsightDate = (value: string, lang: "fr" | "en") => {
-  const parsed = new Date(`${value}T00:00:00`);
-
-  if (Number.isNaN(parsed.getTime())) {
-    return value;
-  }
-
-  return new Intl.DateTimeFormat(lang === "fr" ? "fr-FR" : "en-US", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  }).format(parsed);
-};
+import useInsightHook from "../../hooks/useInsightHook/useInsightHook";
+import { formatDateDDMMMYYYY } from "../../utils/func";
 
 const ClothInsights = () => {
   const { id } = useParams<{ id: string }>();
   const { lang } = useLanguage();
   const { common, insights } = getClothMessages(lang);
-  const [data, setData] = useState<IInsightResult | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [hasError, setHasError] = useState(false);
+  const { loading, hasError, insightData } = useInsightHook(id!);
+  const stats = [
+    { label: insights.totalViews, value: insightData?.totalViews },
+    { label: insights.uniqueViews, value: insightData?.uniqueViews },
+    { label: insights.totalNodeClicks, value: insightData?.totalNodeClicks },
+  ];
 
-
-  // // Todo : À mettre dans un hook pour séparer la logique de données et de présentation + rendre le composant plus générique pour d'autres types d'insights
-  // useEffect(() => {
-  //   if (!id) {
-  //     setLoading(false);
-  //     setHasError(true);
-  //     return;
-  //   }
-
-  //   setLoading(true);
-  //   setHasError(false);
-  //   // Mettre cette logique de chargement dans un hook pour séparer la logique de données et de présentation + rendre le composant plus générique pour d'autres types d'insights
-  //   fetchCanvasInsights(id)
-  //     .then(setData)
-  //     .catch(() => {
-  //       setHasError(true);
-  //     })
-  //     .finally(() => {
-  //       setLoading(false);
-  //     });
-  // }, [id,setLoading,setHasError,setData]);
-
-    // Todo : À mettre dans un hook pour séparer la logique de données et de présentation + rendre le composant plus générique pour d'autres types d'insights
-  useEffect(() => {
-    if (!id) return;
-
-    let ignore = false; // Flag pour ignorer le résultat si nécessaire
-
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-            // Mettre cette logique de chargement dans un hook pour séparer la logique de données et de présentation + rendre le composant plus générique pour d'autres types d'insights
-        const result = await fetchCanvasInsights(id);
-        
-        if (!ignore) { // On ne met à jour l'état que si l'effet est toujours valide
-          setData(result);
-        }
-      } catch (e) {
-        // Todo : éviter de rendre obligatoire l'objet error dans le catch pour pouvoir différencier les types d'erreurs (ex: 404 vs 500) et afficher des messages d'erreur plus précis en fonction du type d'erreur
-        console.error(e);
-        if (!ignore) setHasError(true);
-      } finally {
-        if (!ignore) setLoading(false);
-      }
-    };
-
-    fetchData();
-
-    // Fonction de nettoyage (cleanup)
-    return () => {
-      ignore = true;
-    };
-  }, [id]);
   if (loading) {
     return (
       <div className="mx-auto flex min-h-[calc(100vh-3.5rem)] w-full max-w-6xl items-center justify-center px-4 py-10 sm:px-6 lg:px-8">
@@ -94,7 +26,7 @@ const ClothInsights = () => {
     );
   }
 
-  if (hasError || !data) {
+  if (hasError || !insightData) {
     return (
       <div className="mx-auto w-full max-w-4xl px-4 py-10 sm:px-6 lg:px-8">
         <Link
@@ -110,18 +42,11 @@ const ClothInsights = () => {
     );
   }
 
-  // Todo: mettre ces stats dans un hook pour séparer la logique de présentation et de données + rendre le composant plus générique pour réutiliser ces cards de stats dans d'autres pages
-  const stats = [
-    { label: insights.totalViews, value: data.totalViews },
-    { label: insights.uniqueViews, value: data.uniqueViews },
-    { label: insights.totalNodeClicks, value: data.totalNodeClicks },
-  ];
-
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
       <div className="flex flex-col gap-4 border-b border-zinc-200 pb-8 dark:border-zinc-800">
         <Link
-          to={`/cloth/${data.canvasId}`}
+          to={`/cloth/${insightData.canvasId}`}
           className="text-sm font-medium text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
         >
           {insights.backToCanvas}
@@ -131,7 +56,7 @@ const ClothInsights = () => {
             {insights.pageEyebrow}
           </p>
           <h1 className="mt-2 text-3xl font-semibold text-zinc-950 dark:text-zinc-50">
-            {data.canvasName}
+            {insightData.canvasName}
           </h1>
         </div>
       </div>
@@ -142,9 +67,11 @@ const ClothInsights = () => {
             key={stat.label}
             className="rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
           >
-            <p className="text-sm text-zinc-500 dark:text-zinc-400">{stat.label}</p>
+            <p className="text-sm text-zinc-500 dark:text-zinc-400">
+              {stat.label}
+            </p>
             <p className="mt-3 text-4xl font-semibold text-zinc-950 dark:text-zinc-50">
-              {formatCount(stat.value, lang)}
+              {stat.value}
             </p>
           </article>
         ))}
@@ -163,23 +90,29 @@ const ClothInsights = () => {
             </div>
           </div>
 
-          {data.viewsOverTime.length === 0 ? (
+          {insightData.viewsOverTime.length === 0 ? (
             <p className="mt-6 text-sm text-zinc-500 dark:text-zinc-400">
               {insights.noViewsData}
             </p>
           ) : (
             <div className="mt-6 space-y-4">
-              {data.viewsOverTime.map((entry) => {
-                const maxCount = Math.max(...data.viewsOverTime.map((item) => item.count), 1);
-                const width = Math.max((entry.count / maxCount) * 100, entry.count > 0 ? 8 : 0);
+              {insightData.viewsOverTime.map((entry) => {
+                const maxCount = Math.max(
+                  ...insightData.viewsOverTime.map((item) => item.count),
+                  1,
+                );
+                const width = Math.max(
+                  (entry.count / maxCount) * 100,
+                  entry.count > 0 ? 8 : 0,
+                );
                 return (
                   <div key={entry.date} className="space-y-2">
                     <div className="flex items-center justify-between gap-4 text-sm">
                       <span className="text-zinc-600 dark:text-zinc-300">
-                        {formatInsightDate(entry.date, lang)}
+                        {formatDateDDMMMYYYY(entry.date, lang)}
                       </span>
                       <span className="font-medium text-zinc-950 dark:text-zinc-50">
-                        {formatCount(entry.count, lang)}
+                        {entry.count}
                       </span>
                     </div>
                     <div className="h-2 rounded-full bg-zinc-100 dark:bg-zinc-800">
@@ -203,13 +136,13 @@ const ClothInsights = () => {
             {insights.topNodesHint}
           </p>
 
-          {data.topNodes.length === 0 ? (
+          {insightData.topNodes.length === 0 ? (
             <p className="mt-6 text-sm text-zinc-500 dark:text-zinc-400">
               {insights.noNodeData}
             </p>
           ) : (
             <div className="mt-6 space-y-3">
-              {data.topNodes.map((node, index) => (
+              {insightData.topNodes.map((node, index) => (
                 <article
                   key={node.nodeId}
                   className="flex items-center justify-between gap-4 rounded-2xl bg-zinc-50 px-4 py-3 dark:bg-zinc-800/70"
@@ -223,7 +156,7 @@ const ClothInsights = () => {
                     </p>
                   </div>
                   <p className="shrink-0 text-sm font-semibold text-zinc-700 dark:text-zinc-200">
-                    {formatCount(node.clicks, lang)} {insights.clicksSuffix}
+                    {node.clicks} {insights.clicksSuffix}
                   </p>
                 </article>
               ))}

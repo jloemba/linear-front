@@ -1,6 +1,6 @@
 import { fireEvent, screen, waitFor } from "@testing-library/react";
 import { SnackbarProvider } from "./SnackbarProvider";
-import useSnackbar from "../../hooks/useSnackbar/useSnackbar";
+import useSnackbar from "../../hooks/useSnackbarHook/useSnackbar";
 import { render } from "@testing-library/react";
 
 const TestConsumer = () => {

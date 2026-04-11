@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
-import useAuth from '../../hooks/useAuth/useAuth';
-import useLanguage from '../../hooks/useLanguage/useLanguage';
-import useSnackbar from '../../hooks/useSnackbar/useSnackbar';
+import useAuth from '../../hooks/useAuthHook/useAuth';
+import useLanguage from '../../hooks/useLanguageHook/useLanguage';
+import useSnackbar from '../../hooks/useSnackbarHook/useSnackbar';
 
 
 const ProtectedCreateButton = () => {

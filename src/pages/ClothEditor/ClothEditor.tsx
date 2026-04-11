@@ -1,6 +1,6 @@
 ﻿import { Link, useParams } from "react-router-dom";
 import ConfirmDialog from "../../components/ConfirmDialog/ConfirmDialog";
-import useLanguage from "../../hooks/useLanguage/useLanguage";
+import useLanguage from "../../hooks/useLanguageHook/useLanguage";
 import { getClothMessages } from "../../i18n/cloth";
 import ClothIdentitySection from "./ClothIdentitySection/ClothIdentitySection";
 import ClothNodesSection from "./ClothNodesSection/ClothNodesSection";
@@ -9,8 +9,8 @@ import ClothQuickNavigation from "./ClothQuickNavigation/ClothQuickNavigation";
 import ClothRelationshipsSection from "./ClothRelationshipsSection/ClothRelationshipsSection";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import useAuth from "../../hooks/useAuth/useAuth";
-import useClothEditor from "../../hooks/useClothEditor/useClothEditor";
+import useAuth from "../../hooks/useAuthHook/useAuth";
+import useClothEditor from "../../hooks/useClothEditorHook/useClothEditor";
 
 const ClothEditor = () => {
   const { lang } = useLanguage();

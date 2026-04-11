@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { ThemeProvider } from "./ThemeProvider";
-import useTheme from "../../hooks/useTheme/useTheme";
+import useTheme from "../../hooks/useThemeHook/useTheme";
 
 const TestConsumer = () => {
   const { theme, toggleTheme } = useTheme();

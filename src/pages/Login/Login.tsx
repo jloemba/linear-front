@@ -1,7 +1,7 @@
 ﻿import { GoogleLogin } from "@react-oauth/google";
-import useLanguage from "../../hooks/useLanguage/useLanguage";
-import useSnackbar from "../../hooks/useSnackbar/useSnackbar";
-import useAuth from "../../hooks/useAuth/useAuth";
+import useLanguage from "../../hooks/useLanguageHook/useLanguage";
+import useSnackbar from "../../hooks/useSnackbarHook/useSnackbar";
+import useAuth from "../../hooks/useAuthHook/useAuth";
 import { getClothMessages } from "../../i18n/cloth";
 
 const Login = () => {

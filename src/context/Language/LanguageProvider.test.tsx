@@ -1,6 +1,6 @@
 import { fireEvent, screen } from "@testing-library/react";
 import { LanguageProvider } from "./LanguageProvider";
-import useLanguage from "../../hooks/useLanguage/useLanguage";
+import useLanguage from "../../hooks/useLanguageHook/useLanguage";
 import { render } from "@testing-library/react";
 
 const TestConsumer = () => {

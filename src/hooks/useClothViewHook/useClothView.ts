@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { trackCanvasView, trackNodeClick } from "../../api/analytics/analyticsApi";
 import { deleteClothById, fetchClothById } from "../../api/cloth/clothApi";
 import type { IClothDetail, IClothNode } from "../../types/cloth";
-import useAuth from "../useAuth/useAuth";
-import useSnackbar from "../useSnackbar/useSnackbar";
+import useAuth from "../useAuthHook/useAuth";
+import useSnackbar from "../useSnackbarHook/useSnackbar";
 
 interface Props {
   id?: string;

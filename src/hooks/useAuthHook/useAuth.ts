@@ -1,6 +1,6 @@
 ﻿import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import useSnackbar from "../useSnackbar/useSnackbar";
+import useSnackbar from "../useSnackbarHook/useSnackbar";
 
 interface User {
   id: string;

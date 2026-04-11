@@ -1,7 +1,7 @@
 ﻿import { useState } from "react";
 import { getClothMessages } from "../../i18n/cloth";
-import useLanguage from "../../hooks/useLanguage/useLanguage";
-import useTheme from "../../hooks/useTheme/useTheme";
+import useLanguage from "../../hooks/useLanguageHook/useLanguage";
+import useTheme from "../../hooks/useThemeHook/useTheme";
 
 interface HeaderAction {
   label: string;

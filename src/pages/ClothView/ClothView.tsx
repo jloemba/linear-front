@@ -1,13 +1,13 @@
 import ClothGraphCanvas from "../../components/ClothGraphCanvas/ClothGraphCanvas";
 import ConfirmDialog from "../../components/ConfirmDialog/ConfirmDialog";
 import { useParams } from "react-router-dom";
-import useLanguage from "../../hooks/useLanguage/useLanguage";
+import useLanguage from "../../hooks/useLanguageHook/useLanguage";
 import { getClothMessages } from "../../i18n/cloth";
 import ClothNodeDetailsPanel from "./ClothNodeDetailsPanel/ClothNodeDetailsPanel";
 import ClothViewHeader from "./ClothViewHeader/ClothViewHeader";
 import ClothViewLegend from "./ClothViewLegend/ClothViewLegend";
-import useAuth from "../../hooks/useAuth/useAuth";
-import useClothView from "../../hooks/useClothView/useClothView";
+import useAuth from "../../hooks/useAuthHook/useAuth";
+import useClothView from "../../hooks/useClothViewHook/useClothView";
 
 const ClothView = () => {
   const { lang } = useLanguage();
