@@ -7,7 +7,7 @@ import { SnackbarProvider } from "../../context/Snackbar/SnackbarProvider";
 
 const mockUseClothEditor = vi.fn();
 
-vi.mock("../../hooks/useClothEditor/useClothEditor", () => ({
+vi.mock("../../hooks/useClothEditorHook/useClothEditor", () => ({
   default: (...args: unknown[]) => mockUseClothEditor(...args),
 }));
 

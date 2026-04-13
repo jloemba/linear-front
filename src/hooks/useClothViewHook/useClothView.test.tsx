@@ -18,7 +18,7 @@ vi.mock("react-router-dom", async () => {
   };
 });
 
-vi.mock("../useSnackbar/useSnackbar", () => ({
+vi.mock("../useSnackbarHook/useSnackbar", () => ({
   default: () => ({
     showSnackbar: showSnackbarMock,
   }),
